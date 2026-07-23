@@ -1,0 +1,76 @@
+# Decap CMS — iki dilli (TR/EN) yapılandırma
+#
+# GitHub Pages statik olduğu için Decap'in "Login with GitHub" akışı bir
+# OAuth proxy'si ister. Proxy, GitHub OAuth kodunu sunucu tarafında token'a
+# çevirir ve Decap'e postMessage ile iletir. İki endpoint sağlamalıdır:
+#   /auth      -> GitHub yetkilendirme akışını başlatır
+#   /callback  -> GitHub kodunu alır, token'a çevirir, Decap'e geri gönderir
+#
+# Önerilen hazır proxy'ler (Cloudflare Worker, ücretsiz):
+#   - https://github.com/sterlingwes/decap-proxy
+#   - https://github.com/ottmartens/decap-cms-github-oauth-provider-cloudflare
+#
+# Kurulum özeti:
+#   1) GitHub'da OAuth App oluştur (Settings > Developer settings > OAuth Apps).
+#      Callback URL: https://<proxy-url>/callback
+#   2) Proxy'yi Cloudflare Worker'a deploy et; Client ID/Secret'u worker
+#      secret'leri olarak ekle (GITHUB_OAUTH_ID / GITHUB_OAUTH_SECRET).
+#   3) Aşağıdaki base_url'i kendi proxy URL'inle değiştir.
+
+backend:
+  name: github
+  repo: burakerguvn/burakerguvn.github.io
+  branch: main
+  base_url: https://decap-proxy.erguvenburak-dev.workers.dev
+  auth_endpoint: /auth
+
+# Statik exportta medya /admin altında değil, repo kökünde public/ tutulur
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+# İki dilli: her post için index.tr.mdx ve index.en.mdx
+i18n:
+  structure: multiple_files
+  locales: [tr, en]
+  default_locale: tr
+
+collections:
+  - name: posts
+    label: "Yazılar / Writing"
+    label_singular: "Yazı / Post"
+    folder: content/posts
+    create: true
+    delete: true
+    extension: mdx
+    format: mdx
+    slug: "{{slug}}"
+    path: "{{slug}}/index"
+    i18n: true
+    summary: "{{title}} — {{date}}"
+    fields:
+      - { name: title, label: "Başlık / Title", widget: string, i18n: true }
+      - { name: dek, label: "Alt başlık / Dek", widget: string, required: false, i18n: true }
+      - { name: date, label: "Tarih / Date", widget: datetime, i18n: duplicate }
+      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: duplicate }
+      - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
+      - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
+
+  - name: research
+    label: "Araştırma / Research"
+    label_singular: "Araştırma notu / Research note"
+    folder: content/research
+    create: true
+    delete: true
+    extension: mdx
+    format: mdx
+    slug: "{{slug}}"
+    path: "{{slug}}/index"
+    i18n: true
+    summary: "{{title}} — {{date}}"
+    fields:
+      - { name: title, label: "Başlık / Title", widget: string, i18n: true }
+      - { name: dek, label: "Alt başlık / Dek", widget: string, required: false, i18n: true }
+      - { name: date, label: "Tarih / Date", widget: datetime, i18n: duplicate }
+      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: duplicate }
+      - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
+      - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
