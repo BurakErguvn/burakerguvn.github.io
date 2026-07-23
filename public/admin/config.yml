@@ -96,9 +96,13 @@ collections:
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
 
   # Özgeçmiş — tek JSON dosyası (i18n'siz; iki dillilik {tr,en} nesneleri içinde)
+  # Üst seviye i18n (multiple_files) bu koleksiyona miras kalırsa Decap save'de
+  # tek cv.json'ı cv.tr.json/cv.en.json olarak bölmeye çalışıp #130 veriyor →
+  # bu yüzden koleksiyonu i18n'den açıkça çıkarıyoruz.
   - name: cv
     label: "Özgeçmiş / CV"
     delete: false
+    i18n: false
     editor:
       preview: false
     files:
