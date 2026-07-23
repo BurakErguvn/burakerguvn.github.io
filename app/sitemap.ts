@@ -14,7 +14,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const l of locales) {
     entries.push({ url: `${BASE}/${l}/`, changeFrequency: "weekly", priority: 1 });
-    for (const c of ["posts", "research"] as Collection[]) {
+    for (const c of ["posts", "research", "notes"] as Collection[]) {
       entries.push({
         url: `${BASE}/${l}/${collectionRoute[c]}/`,
         changeFrequency: "weekly",
@@ -29,7 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         });
       }
     }
-    for (const sec of ["notes", "about", "tags"]) {
+    for (const sec of ["about", "tags"]) {
       entries.push({ url: `${BASE}/${l}/${sec}/`, changeFrequency: "monthly", priority: 0.4 });
     }
   }

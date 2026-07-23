@@ -3,13 +3,30 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
     <title>İçerik Yöneticisi — burakerguvn.github.io</title>
     <link rel="icon" href="data:," />
-  </head>
-  <body>
+
+    <!-- KaTeX (matematik önizleme) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+    />
+
     <!-- Decap CMS -->
     <script src="https://unpkg.com/decap-cms@^3.6.0/dist/decap-cms.js"></script>
 
+    <!-- Önizleme bağımlılıkları -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: false, theme: "neutral" });
+      window.__mermaid = mermaid;
+    </script>
+  </head>
+  <body>
     <!--
       GitHub Pages üzerinde Decap auth için bir OAuth proxy gerekir.
       Proxy: https://decap-proxy.erguvenburak-dev.workers.dev
@@ -17,5 +34,181 @@
       https://decap-proxy.erguvenburak-dev.workers.dev/callback
       base_url + auth_endpoint config.yml içinde tanımlı.
     -->
+
+    <script>
+      (function () {
+        var CMS = window.CMS;
+        if (!CMS || !window.createClass || !window.h) return;
+
+        // ---------- önizleme stili (site görsel diliyle uyumlu) ----------
+        // KaTeX CSS'ini önizleme iframe'ine enjekte et (parent <head>'i iframe'e uygulanmaz)
+        CMS.registerPreviewStyle(
+          "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+        );
+        var PREVIEW_CSS = `
+        .pv-shell{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111;background:#fff;max-width:680px;margin:0 auto;padding:2rem 1.25rem 6rem;line-height:1.65}
+        .pv-eyebrow{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#666;margin:0 0 .5rem}
+        .pv-shell h1{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:2rem;line-height:1.15;margin:.2rem 0 .6rem;font-weight:600}
+        .pv-dek{font-size:1.05rem;color:#444;margin:0 0 1rem}
+        .pv-meta{font-size:.8rem;color:#777;margin:0 0 1.5rem}
+        .pv-prose{font-size:1.02rem}
+        .pv-prose h2{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.4rem;margin:2rem 0 .6rem;font-weight:600}
+        .pv-prose h3{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.15rem;margin:1.6rem 0 .5rem;font-weight:600}
+        .pv-prose p{margin:0 0 1rem}
+        .pv-prose a{color:#1d4ed8;text-decoration:underline}
+        .pv-prose ul,.pv-prose ol{margin:0 0 1rem 1.25rem}
+        .pv-prose li{margin:.25rem 0}
+        .pv-prose blockquote{border-left:3px solid #ddd;margin:0 0 1rem;padding:0 0 0 1rem;color:#555}
+        .pv-prose code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9em;background:#f4f4f5;padding:.12em .35em;border-radius:4px}
+        .pv-prose pre{background:#0b0b0c;color:#e6e6e6;padding:1rem;border-radius:8px;overflow:auto;margin:0 0 1rem}
+        .pv-prose pre code{background:none;padding:0;color:inherit;font-size:.85rem}
+        .pv-prose img{max-width:100%;height:auto;border-radius:6px}
+        .pv-prose table{border-collapse:collapse;margin:0 0 1rem}
+        .pv-prose th,.pv-prose td{border:1px solid #ddd;padding:.4rem .6rem}
+        .pv-callout{border:1px solid #d8d8d8;border-left:3px solid #1d4ed8;background:#fafafa;border-radius:6px;padding:.9rem 1rem;margin:0 0 1.2rem}
+        .pv-callout__title{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#1d4ed8;margin:0 0 .4rem}
+        .pv-callout--theorem{border-left-color:#7c3aed}.pv-callout--theorem .pv-callout__title{color:#7c3aed}
+        .pv-callout--definition{border-left-color:#0f766e}.pv-callout--definition .pv-callout__title{color:#0f766e}
+        .pv-callout--lemma{border-left-color:#b45309}.pv-callout--lemma .pv-callout__title{color:#b45309}
+        .pv-mermaid{display:flex;justify-content:center;margin:0 0 1.2rem}
+        `;
+        CMS.registerPreviewStyle(PREVIEW_CSS, { raw: true });
+
+        // ---------- yardımcılar ----------
+        function esc(s) {
+          return String(s == null ? "" : s)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+        }
+
+        // MDX özel bileşenlerini çıkarıp placeholder'a koy; iç markdown parse edilir.
+        function extractBlocks(md) {
+          var store = [];
+          function stash(label, kind, inner) {
+            var i = store.length;
+            store.push({ label: label, kind: kind, inner: inner });
+            return "\n\n\x00BLK" + i + "\x00\n\n";
+          }
+          md = md.replace(
+            /<Callout\s+title="([^"]*)"\s*>([\s\S]*?)<\/Callout>/g,
+            function (_, t, inner) {
+              return stash(t, "callout", inner);
+            }
+          );
+          md = md.replace(/<Theorem\s*>([\s\S]*?)<\/Theorem>/g, function (_, inner) {
+            return stash("Theorem", "theorem", inner);
+          });
+          md = md.replace(/<Definition\s*>([\s\S]*?)<\/Definition>/g, function (_, inner) {
+            return stash("Definition", "definition", inner);
+          });
+          md = md.replace(/<Lemma\s*>([\s\S]*?)<\/Lemma>/g, function (_, inner) {
+            return stash("Lemma", "lemma", inner);
+          });
+          return { md: md, store: store };
+        }
+
+        function reassemble(html, store) {
+          return html.replace(/\x00BLK(\d+)\x00/g, function (_, i) {
+            var b = store[+i];
+            if (!b) return "";
+            var cls = "pv-callout" + (b.kind !== "callout" ? " pv-callout--" + b.kind : "");
+            return (
+              '<div class="' +
+              cls +
+              '"><div class="pv-callout__title">' +
+              esc(b.label) +
+              '</div><div class="pv-callout__body">' +
+              window.marked.parse(b.inner) +
+              "</div></div>"
+            );
+          });
+        }
+
+        function renderMermaid(container) {
+          var mermaid = window.__mermaid;
+          if (!mermaid) return;
+          var nodes = Array.from(container.querySelectorAll("code.language-mermaid"));
+          nodes.forEach(function (codeEl, i) {
+            var pre = codeEl.parentElement;
+            if (!pre || pre.tagName !== "PRE") return;
+            var graph = codeEl.textContent;
+            var id = "mmd-" + i + "-" + Date.now();
+            Promise.resolve(mermaid.render(id, graph))
+              .then(function (res) {
+                var svg = res && res.svg ? res.svg : res;
+                var div = document.createElement("div");
+                div.className = "pv-mermaid";
+                div.innerHTML = svg;
+                pre.replaceWith(div);
+              })
+              .catch(function () {});
+          });
+        }
+
+        function paintMath(container) {
+          try {
+            window.renderMathInElement(container, {
+              delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "$", right: "$", display: false },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "\\[", right: "\\]", display: true },
+              ],
+              throwOnError: false,
+            });
+          } catch (e) {}
+        }
+
+        // ---------- önizleme bileşeni fabrikası ----------
+        function makePreview(eyebrow) {
+          return window.createClass({
+            componentDidMount: function () {
+              this.paint();
+            },
+            componentDidUpdate: function () {
+              this.paint();
+            },
+            paint: function () {
+              var root = this._root;
+              if (!root) return;
+              var entry = this.props.entry;
+              var body = entry.getIn(["data", "body"]) || "";
+              var ex = extractBlocks(body);
+              var html = window.marked.parse(ex.md);
+              html = reassemble(html, ex.store);
+              root.innerHTML = html;
+              paintMath(root);
+              renderMermaid(root);
+            },
+            render: function () {
+              var self = this;
+              var entry = this.props.entry;
+              var title = entry.getIn(["data", "title"]) || "";
+              var dek = entry.getIn(["data", "dek"]) || "";
+              var date = entry.getIn(["data", "date"]) || "";
+              return window.h(
+                "div",
+                { className: "pv-shell" },
+                window.h("p", { className: "pv-eyebrow" }, eyebrow),
+                window.h("h1", {}, title),
+                dek ? window.h("p", { className: "pv-dek" }, dek) : null,
+                date ? window.h("p", { className: "pv-meta" }, date) : null,
+                window.h("div", {
+                  className: "pv-prose",
+                  ref: function (el) {
+                    self._root = el;
+                  },
+                })
+              );
+            },
+          });
+        }
+
+        CMS.registerPreviewTemplate("posts", makePreview("Writing · Yazı"));
+        CMS.registerPreviewTemplate("research", makePreview("Research · Araştırma"));
+        CMS.registerPreviewTemplate("notes", makePreview("Notes · Not"));
+      })();
+    </script>
   </body>
 </html>

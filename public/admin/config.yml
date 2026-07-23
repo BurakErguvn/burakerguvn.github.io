@@ -74,3 +74,23 @@ collections:
       - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: true }
       - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
+
+  - name: notes
+    label: "Notlar / Notes"
+    label_singular: "Not / Note"
+    folder: content/notes
+    create: true
+    delete: true
+    extension: mdx
+    format: frontmatter
+    slug: "{{slug}}"
+    path: "{{slug}}/index"
+    i18n: true
+    summary: "{{title}} — {{date}}"
+    fields:
+      - { name: title, label: "Başlık / Title", widget: string, i18n: true }
+      - { name: dek, label: "Alt başlık / Dek", widget: string, required: false, i18n: true }
+      - { name: date, label: "Tarih / Date", widget: datetime, i18n: duplicate }
+      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: true }
+      - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
+      - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }

@@ -6,14 +6,16 @@ export function PostList({
   posts,
   locale,
   route,
+  emptyLabel,
 }: {
   posts: PostMeta[];
   locale: Locale;
   route: string;
+  emptyLabel?: string;
 }) {
   const t = dict[locale];
   if (posts.length === 0) {
-    return <p className="eyebrow">{t.noPosts}</p>;
+    return <p className="eyebrow">{emptyLabel ?? t.noPosts}</p>;
   }
   return (
     <ul className="post-list">

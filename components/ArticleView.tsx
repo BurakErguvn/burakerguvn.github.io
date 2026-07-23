@@ -26,6 +26,12 @@ export function ArticleView({
   const toc = buildToc(post.raw);
   const available = localesFor(post.collection, post.slug);
 
+  const backLabel: Record<Collection, string> = {
+    posts: t.backToIndex,
+    research: t.backToResearch,
+    notes: t.backToNotes,
+  };
+
   const hrefs: Partial<Record<Locale, string>> = {};
   for (const l of locales) {
     hrefs[l] = `/${l}/${route}/${post.slug}/`;
@@ -36,7 +42,7 @@ export function ArticleView({
       <div className="main-col">
         <article className="prose">
           <header className="article-header">
-            <p className="eyebrow">{post.collection === "research" ? t.research : t.writing}</p>
+            <p className="eyebrow">{collectionLabel(post.collection, locale)}</p>
             <h1>{post.title}</h1>
             {post.dek ? <p className="article-header__dek">{post.dek}</p> : null}
             <div className="article-meta">
@@ -56,7 +62,7 @@ export function ArticleView({
 
           <EntropyDivider />
           <Link href={`/${locale}/${route}/`} className="eyebrow">
-            ← {t.backToIndex}
+            ← {backLabel[post.collection]}
           </Link>
         </article>
       </div>
@@ -66,5 +72,6 @@ export function ArticleView({
 }
 
 export function collectionLabel(c: Collection, locale: Locale) {
-  return c === "research" ? dict[locale].research : dict[locale].writing;
+  const t = dict[locale];
+  return c === "research" ? t.research : c === "notes" ? t.notes : t.writing;
 }

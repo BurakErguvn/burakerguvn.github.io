@@ -6,18 +6,20 @@ import readingTime from "reading-time";
 import GithubSlugger from "github-slugger";
 import { locales, defaultLocale, type Locale } from "./i18n";
 
-export type Collection = "posts" | "research";
+export type Collection = "posts" | "research" | "notes";
 
 /** Route segment -> content directory. */
 export const collectionDir: Record<Collection, string> = {
   posts: "posts",
   research: "research",
+  notes: "notes",
 };
 
 /** Route segment shown in URL. */
 export const collectionRoute: Record<Collection, string> = {
   posts: "writing",
   research: "research",
+  notes: "notes",
 };
 
 export interface Frontmatter {
@@ -60,6 +62,7 @@ function collectionOf(filePath: string): Collection | null {
   const top = rel.split(path.sep)[0];
   if (top === "posts") return "posts";
   if (top === "research") return "research";
+  if (top === "notes") return "notes";
   return null;
 }
 
