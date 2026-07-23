@@ -1,24 +1,61 @@
 {
-  "name": "Burak Ergüven",
-  "title": {
-    "tr": "Bilgisayar Mühendisliği son sınıf öğrencisi",
-    "en": "Senior Computer Engineering student"
-  },
-  "location": {
-    "tr": "Türkiye",
-    "en": "Türkiye"
-  },
-  "email": "ornek@eposta.com",
-  "links": {
-    "github": "https://github.com/burakerguvn",
-    "linkedin": "",
-    "scholar": ""
-  },
-  "avatar": "/avatar.jpg",
+  "skills": [
+    {
+      "category": {
+        "tr": "Programlama Dilleri",
+        "en": "Programming Languages"
+      },
+      "items": [
+        "Python",
+        "TypeScript",
+        "JavaScript",
+        "C/C++",
+        "SQL"
+      ]
+    },
+    {
+      "category": {
+        "tr": "ML / DL",
+        "en": "ML / DL"
+      },
+      "items": [
+        "PyTorch",
+        "TensorFlow",
+        "scikit-learn",
+        "NumPy",
+        "Pandas"
+      ]
+    },
+    {
+      "category": {
+        "tr": "Kuantum & Araçlar",
+        "en": "Quantum & Tools"
+      },
+      "items": [
+        "Qiskit",
+        "LaTeX",
+        "Mermaid"
+      ]
+    },
+    {
+      "category": {
+        "tr": "DevOps & Web",
+        "en": "DevOps & Web"
+      },
+      "items": [
+        "Git",
+        "Docker",
+        "Next.js",
+        "GitHub Actions",
+        "Linux"
+      ]
+    }
+  ],
   "summary": {
-    "tr": "Veri Bilimi, Makine Öğrenmesi / Derin Öğrenme (ML/DL) ve Kuantum Hata Düzeltme (QEC) / Kuantum ML alanlarında çalışan bilgisayar mühendisliği son sınıf öğrencisiyim. Akademik disiplini mühendislik pratiğiyle birleştirerek karmaşık problemleri matematiksel ve algoritmik derinliğiyle eleitmeyi seviyorum.",
-    "en": "Senior computer engineering student working in Data Science, Machine Learning / Deep Learning (ML/DL) and Quantum Error Correction (QEC) / Quantum ML. I enjoy merging academic discipline with engineering practice to tackle complex problems with mathematical and algorithmic depth."
+    "tr": "İnsanlık her yerde, en basit oyunda bile karşılaştığı süreçleri ve sistemleri optimize etmeye çalışır. Benim teknolojiye olan tutkum da tam olarak bu optimizasyon arayışından besleniyor. Veri bilimi ve makine öğrenimiyle (ML/DL) başlayan yolculuğumu, blokzincir ve akıllı kontratların sunduğu güvenli ve merkeziyetsiz mimarilerle genişlettim. Bugün ise QWorld QSummer eğitimi kapsamında Kuantum Hata Düzeltme ve kuantum algoritmalarını derin öğrenme disiplinleriyle harmanlıyor; geleceğin karmaşık hesaplama ve optimizasyon problemlerine yenilikçi, yüksek performanslı çözümler üretmeye odaklanıyorum.",
+    "en": "Humanity strives to optimise the processes and systems it encounters everywhere, even in the simplest of games. My passion for technology is fuelled precisely by this quest for optimisation. I began my journey with data science and machine learning (ML/DL), and have since expanded it to include the secure and decentralised architectures offered by blockchain and smart contracts. Today, as part of the QWorld QSummer training programme, I am combining Quantum Error Correction and quantum algorithms with deep learning disciplines; I am focused on producing innovative, high-performance solutions to the complex computational and optimisation problems of the future."
   },
+  "publications": [],
   "education": [
     {
       "degree": {
@@ -37,31 +74,6 @@
       }
     }
   ],
-  "researchInterests": [
-    { "tr": "Veri Bilimi", "en": "Data Science" },
-    { "tr": "Makine Öğrenmesi / Derin Öğrenme (ML/DL)", "en": "Machine Learning / Deep Learning (ML/DL)" },
-    { "tr": "Kuantum Hata Düzeltme (QEC)", "en": "Quantum Error Correction (QEC)" },
-    { "tr": "Kuantum ML", "en": "Quantum ML" },
-    { "tr": "Blokzincir & Akıllı Kontratlar (uzaklaşıldı)", "en": "Blockchain & Smart Contracts (moved away)" }
-  ],
-  "skills": [
-    {
-      "category": { "tr": "Programlama Dilleri", "en": "Programming Languages" },
-      "items": ["Python", "TypeScript", "JavaScript", "C/C++", "SQL"]
-    },
-    {
-      "category": { "tr": "ML / DL", "en": "ML / DL" },
-      "items": ["PyTorch", "TensorFlow", "scikit-learn", "NumPy", "Pandas"]
-    },
-    {
-      "category": { "tr": "Kuantum & Araçlar", "en": "Quantum & Tools" },
-      "items": ["Qiskit", "LaTeX", "Mermaid"]
-    },
-    {
-      "category": { "tr": "DevOps & Web", "en": "DevOps & Web" },
-      "items": ["Git", "Docker", "Next.js", "GitHub Actions", "Linux"]
-    }
-  ],
   "experience": [
     {
       "role": {
@@ -70,13 +82,54 @@
       },
       "org": "Kurum / Laboratuvar adı",
       "start": "2025",
-      "end": { "tr": "2025", "en": "2025" },
+      "end": {
+        "tr": "2025",
+        "en": "2025"
+      },
       "description": {
         "tr": "Kısa açıklama: üzerinde çalıştığın problem, katkın ve sonuçlar.",
         "en": "Short description: the problem you worked on, your contribution, and outcomes."
       }
     }
   ],
+  "name": "Burak Ergüven",
+  "researchInterests": [
+    {
+      "tr": "Veri Bilimi",
+      "en": "Data Science"
+    },
+    {
+      "tr": "Makine Öğrenmesi / Derin Öğrenme (ML/DL)",
+      "en": "Machine Learning / Deep Learning (ML/DL)"
+    },
+    {
+      "tr": "Kuantum Hata Düzeltme (QEC)",
+      "en": "Quantum Error Correction (QEC)"
+    },
+    {
+      "tr": "Kuantum ML",
+      "en": "Quantum ML"
+    },
+    {
+      "tr": "Blokzincir & Akıllı Kontratlar (uzaklaşıldı)",
+      "en": "Blockchain & Smart Contracts (moved away)"
+    }
+  ],
+  "location": {
+    "tr": "Türkiye",
+    "en": "Türkiye"
+  },
+  "title": {
+    "tr": "Bilgisayar Mühendisliği Öğrencisi",
+    "en": "Computer Engineering Student"
+  },
+  "avatar": "/avatar.jpg",
+  "certifications": [],
+  "links": {
+    "github": "https://github.com/burakerguvn",
+    "linkedin": "",
+    "scholar": ""
+  },
   "projects": [
     {
       "name": "burakerguvn.github.io",
@@ -84,20 +137,36 @@
         "tr": "Kişisel teknik blog ve araştırma defteri — Next.js statik export, Decap CMS, MDX + KaTeX + Mermaid.",
         "en": "Personal technical blog and research notebook — Next.js static export, Decap CMS, MDX + KaTeX + Mermaid."
       },
-      "tags": ["Next.js", "MDX", "KaTeX", "Mermaid"],
+      "tags": [
+        "Next.js",
+        "MDX",
+        "KaTeX",
+        "Mermaid"
+      ],
       "link": "https://github.com/burakerguvn/burakerguvn.github.io"
     }
   ],
-  "publications": [],
-  "certifications": [],
   "languages": [
     {
-      "name": { "tr": "Türkçe", "en": "Turkish" },
-      "level": { "tr": "Anadil", "en": "Native" }
+      "name": {
+        "tr": "Türkçe",
+        "en": "Turkish"
+      },
+      "level": {
+        "tr": "Anadil",
+        "en": "Native"
+      }
     },
     {
-      "name": { "tr": "İngilizce", "en": "English" },
-      "level": { "tr": "İleri (C1)", "en": "Advanced (C1)" }
+      "name": {
+        "tr": "İngilizce",
+        "en": "English"
+      },
+      "level": {
+        "tr": "İleri (C1)",
+        "en": "Advanced (C1)"
+      }
     }
-  ]
+  ],
+  "email": "ornek@eposta.com"
 }
