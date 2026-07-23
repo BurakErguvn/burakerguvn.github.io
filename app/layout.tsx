@@ -25,7 +25,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Burak Ergüven — The Information Theorist",
+    default: "Burak Ergüven — Blog",
     template: "%s — Burak Ergüven",
   },
   description:

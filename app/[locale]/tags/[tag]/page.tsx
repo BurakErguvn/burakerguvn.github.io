@@ -11,7 +11,11 @@ export function generateStaticParams() {
   for (const l of locales) {
     for (const s of getAllTagSlugs(l)) slugs.add(s);
   }
-  return [...slugs].map((tag) => ({ tag }));
+  const tags = [...slugs];
+  // Next.js output:export, boş generateStaticParams'i kabul etmez;
+  // içerik boşken placeholder döndür.
+  if (tags.length === 0) return [{ tag: "__none__" }];
+  return tags.map((tag) => ({ tag }));
 }
 
 export default function TagPage({
@@ -19,8 +23,16 @@ export default function TagPage({
 }: {
   params: { locale: Locale; tag: string };
 }) {
-  const posts = getPostsByTagSlug(params.locale, params.tag);
   const t = dict[params.locale];
+  if (params.tag === "__none__") {
+    return (
+      <div className="main-col">
+        <h1>{t.tags}</h1>
+        <p className="eyebrow">{t.noTags}</p>
+      </div>
+    );
+  }
+  const posts = getPostsByTagSlug(params.locale, params.tag);
   return (
     <div className="main-col">
       <h1>#{params.tag}</h1>

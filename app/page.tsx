@@ -5,7 +5,7 @@ export default function RootPage() {
     <>
       <meta httpEquiv="refresh" content="0; url=/tr/" />
       <p style={{ fontFamily: "monospace", padding: "2rem" }}>
-        Yönlendiriliyor… <Link href="/tr">/tr</Link>
+        Yönlendiriliyor…
       </p>
     </>
   );
