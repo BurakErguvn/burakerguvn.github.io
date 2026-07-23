@@ -99,6 +99,8 @@ collections:
   - name: cv
     label: "Özgeçmiş / CV"
     delete: false
+    editor:
+      preview: false
     files:
       - name: cv
         label: "Özgeçmiş / CV"
