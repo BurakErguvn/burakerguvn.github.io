@@ -129,15 +129,15 @@ collections:
             widget: object
             collapsed: true
             fields:
-              - { name: tr, label: "Türkçe", widget: string }
-              - { name: en, label: "English", widget: string }
+              - { name: tr, label: "Türkçe", widget: string, required: false }
+              - { name: en, label: "English", widget: string, required: false }
           - label: "Konum / Location"
             name: location
             widget: object
             collapsed: true
             fields:
-              - { name: tr, label: "Türkçe", widget: string }
-              - { name: en, label: "English", widget: string }
+              - { name: tr, label: "Türkçe", widget: string, required: false }
+              - { name: en, label: "English", widget: string, required: false }
           - { name: email, label: "E-posta / Email", widget: string }
           - label: "Bağlantılar / Links"
             name: links
@@ -153,8 +153,8 @@ collections:
             widget: object
             collapsed: true
             fields:
-              - { name: tr, label: "Türkçe", widget: text }
-              - { name: en, label: "English", widget: text }
+              - { name: tr, label: "Türkçe", widget: text, required: false }
+              - { name: en, label: "English", widget: text, required: false }
           - label: "Eğitim / Education"
             name: education
             widget: list
@@ -165,8 +165,8 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - { name: institution, label: "Kurum / Institution", widget: string }
               - { name: start, label: "Başlangıç / Start", widget: string }
               - label: "Bitiş / End"
@@ -174,23 +174,23 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - label: "Not / Note"
                 name: note
                 widget: object
                 collapsed: true
                 required: false
                 fields:
-                  - { name: tr, label: "Türkçe", widget: text }
-                  - { name: en, label: "English", widget: text }
+                  - { name: tr, label: "Türkçe", widget: text, required: false }
+                  - { name: en, label: "English", widget: text, required: false }
           - label: "Araştırma İlgi Alanları / Research Interests"
             name: researchInterests
             widget: list
             collapsed: true
             fields:
-              - { name: tr, label: "Türkçe", widget: string }
-              - { name: en, label: "English", widget: string }
+              - { name: tr, label: "Türkçe", widget: string, required: false }
+              - { name: en, label: "English", widget: string, required: false }
           - label: "Yetenekler / Skills"
             name: skills
             widget: list
@@ -201,8 +201,8 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - label: "Maddeler / Items"
                 name: items
                 widget: list
@@ -210,14 +210,15 @@ collections:
             name: experience
             widget: list
             collapsed: true
+            required: false
             fields:
               - label: "Rol / Role"
                 name: role
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - { name: org, label: "Kurum / Org", widget: string }
               - { name: start, label: "Başlangıç / Start", widget: string }
               - label: "Bitiş / End"
@@ -225,15 +226,15 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - label: "Açıklama / Description"
                 name: description
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: text }
-                  - { name: en, label: "English", widget: text }
+                  - { name: tr, label: "Türkçe", widget: text, required: false }
+                  - { name: en, label: "English", widget: text, required: false }
           - label: "Projeler / Projects"
             name: projects
             widget: list
@@ -245,8 +246,8 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: text }
-                  - { name: en, label: "English", widget: text }
+                  - { name: tr, label: "Türkçe", widget: text, required: false }
+                  - { name: en, label: "English", widget: text, required: false }
               - label: "Etiketler / Tags"
                 name: tags
                 widget: list
@@ -273,8 +274,8 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - { name: issuer, label: "Veren / Issuer", widget: string }
               - { name: year, label: "Yıl / Year", widget: string }
               - { name: link, label: "Bağlantı / Link", widget: string, required: false }
@@ -288,12 +289,12 @@ collections:
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
               - label: "Seviye / Level"
                 name: level
                 widget: object
                 collapsed: true
                 fields:
-                  - { name: tr, label: "Türkçe", widget: string }
-                  - { name: en, label: "English", widget: string }
+                  - { name: tr, label: "Türkçe", widget: string, required: false }
+                  - { name: en, label: "English", widget: string, required: false }
