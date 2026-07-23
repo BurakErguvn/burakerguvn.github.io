@@ -260,6 +260,7 @@ collections:
                   - { name: en, label: "English", widget: string }
               - { name: issuer, label: "Veren / Issuer", widget: string }
               - { name: year, label: "Yıl / Year", widget: string }
+              - { name: link, label: "Bağlantı / Link", widget: string, required: false }
           - label: "Diller / Languages"
             name: languages
             widget: list

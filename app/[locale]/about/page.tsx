@@ -204,7 +204,9 @@ export default function AboutPage({ params }: { params: { locale: Locale } }) {
             {cv.certifications.map((c, i) => (
               <li key={i} className="cv-timeline__item">
                 <div className="cv-timeline__head">
-                  <span className="cv-timeline__title">{pick(c.name)}</span>
+                  <span className="cv-timeline__title">
+                    {c.link ? <a href={c.link}>{pick(c.name)}</a> : pick(c.name)}
+                  </span>
                   <span className="cv-timeline__date">{c.year}</span>
                 </div>
                 <div className="cv-timeline__org">{c.issuer}</div>

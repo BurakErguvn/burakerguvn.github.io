@@ -5,55 +5,33 @@
         "tr": "Programlama Dilleri",
         "en": "Programming Languages"
       },
-      "items": [
-        "Python",
-        "TypeScript",
-        "JavaScript",
-        "C/C++",
-        "SQL"
-      ]
+      "items": ["Python", "TypeScript", "Rust", "SQL"]
     },
     {
       "category": {
         "tr": "ML / DL",
         "en": "ML / DL"
       },
-      "items": [
-        "PyTorch",
-        "TensorFlow",
-        "scikit-learn",
-        "NumPy",
-        "Pandas"
-      ]
+      "items": ["PyTorch", "TensorFlow", "scikit-learn", "NumPy", "Pandas"]
     },
     {
       "category": {
         "tr": "Kuantum & Araçlar",
         "en": "Quantum & Tools"
       },
-      "items": [
-        "Qiskit",
-        "LaTeX",
-        "Mermaid"
-      ]
+      "items": ["Qiskit", "Cirq"]
     },
     {
       "category": {
         "tr": "DevOps & Web",
         "en": "DevOps & Web"
       },
-      "items": [
-        "Git",
-        "Docker",
-        "Next.js",
-        "GitHub Actions",
-        "Linux"
-      ]
+      "items": ["Git", "Docker", "Next.js", "GitHub Actions", "CI/CD", "Linux"]
     }
   ],
   "summary": {
     "tr": "İnsanlık her yerde, en basit oyunda bile karşılaştığı süreçleri ve sistemleri optimize etmeye çalışır. Benim teknolojiye olan tutkum da tam olarak bu optimizasyon arayışından besleniyor. Veri bilimi ve makine öğrenimiyle (ML/DL) başlayan yolculuğumu, blokzincir ve akıllı kontratların sunduğu güvenli ve merkeziyetsiz mimarilerle genişlettim. Bugün ise QWorld QSummer eğitimi kapsamında Kuantum Hata Düzeltme ve kuantum algoritmalarını derin öğrenme disiplinleriyle harmanlıyor; geleceğin karmaşık hesaplama ve optimizasyon problemlerine yenilikçi, yüksek performanslı çözümler üretmeye odaklanıyorum.",
-    "en": "Humanity strives to optimise the processes and systems it encounters everywhere, even in the simplest of games. My passion for technology is fuelled precisely by this quest for optimisation. I began my journey with data science and machine learning (ML/DL), and have since expanded it to include the secure and decentralised architectures offered by blockchain and smart contracts. Today, as part of the QWorld QSummer training programme, I am combining Quantum Error Correction and quantum algorithms with deep learning disciplines; I am focused on producing innovative, high-performance solutions to the complex computational and optimisation problems of the future."
+    "en": "Humanity strives to optimise the processes and systems it encounters everywhere, even in the simplest of games. My passion for technology is fuelled precisely by this quest for optimisation. I began my journey with data science and machine learning (ML/DL), and have since expanded it to include the secure and decentralised architectures offered by blockchain and smart contracts. Today, as part of the QWorld QSummer training programme, I am combining Quantum Error Correction and quantum algorithms with deep learning disciplines; I am focused on producing innovative, high-performance solutions to the complex computational and optimisation problems of the future.\n"
   },
   "publications": [],
   "education": [
@@ -62,36 +40,19 @@
         "tr": "Lisans — Bilgisayar Mühendisliği",
         "en": "BSc — Computer Engineering"
       },
-      "institution": "Üniversite adı",
-      "start": "2021",
+      "institution": "KTO Karatay University",
+      "start": "2022",
       "end": {
-        "tr": "2026 (mezun adayı)",
-        "en": "2026 (candidate)"
+        "tr": "2027",
+        "en": "2027"
       },
       "note": {
-        "tr": "İlgili dersler: Olasılık, Lineer Cebir, Algoritmalar, Makine Öğrenmesi, Kuantum Bilgi İşleme.",
-        "en": "Relevant coursework: Probability, Linear Algebra, Algorithms, Machine Learning, Quantum Information Processing."
+        "tr": "",
+        "en": ""
       }
     }
   ],
-  "experience": [
-    {
-      "role": {
-        "tr": "Araştırma Stajı / Proje",
-        "en": "Research Internship / Project"
-      },
-      "org": "Kurum / Laboratuvar adı",
-      "start": "2025",
-      "end": {
-        "tr": "2025",
-        "en": "2025"
-      },
-      "description": {
-        "tr": "Kısa açıklama: üzerinde çalıştığın problem, katkın ve sonuçlar.",
-        "en": "Short description: the problem you worked on, your contribution, and outcomes."
-      }
-    }
-  ],
+  "experience": [],
   "name": "Burak Ergüven",
   "researchInterests": [
     {
@@ -107,43 +68,59 @@
       "en": "Quantum Error Correction (QEC)"
     },
     {
-      "tr": "Kuantum ML",
-      "en": "Quantum ML"
+      "tr": "Kuantum Makine Öğrenmesi (QML)",
+      "en": "Quantum Machine Learning (QML)"
     },
     {
-      "tr": "Blokzincir & Akıllı Kontratlar (uzaklaşıldı)",
-      "en": "Blockchain & Smart Contracts (moved away)"
+      "tr": "Kuantum Optimizasyon Algoritmaları",
+      "en": "Quantum Optimisation Algorithms"
+    },
+    {
+      "tr": "Blokzincir & Akıllı Kontratlar",
+      "en": "Blockchain & Smart Contracts"
     }
   ],
   "location": {
-    "tr": "Türkiye",
-    "en": "Türkiye"
+    "tr": "Türkiye / Konya",
+    "en": "Türkiye / Konya"
   },
   "title": {
     "tr": "Bilgisayar Mühendisliği Öğrencisi",
     "en": "Computer Engineering Student"
   },
   "avatar": "/avatar.jpg",
-  "certifications": [],
+  "certifications": [
+    {
+      "name": {
+        "tr": "Oyun Teorisi",
+        "en": "Game Theory"
+      },
+      "issuer": "Stanford University",
+      "year": "2026"
+    },
+    {
+      "name": {
+        "tr": "Python, Veri Bilimi ve Machine Learning",
+        "en": "Python, Data Science and Machine Learning"
+      },
+      "issuer": "Udemy - Veri Bilimi Okulu",
+      "year": "2023"
+    }
+  ],
   "links": {
     "github": "https://github.com/burakerguvn",
-    "linkedin": "",
+    "linkedin": "https://www.linkedin.com/in/erguvenburak/",
     "scholar": ""
   },
   "projects": [
     {
-      "name": "burakerguvn.github.io",
+      "name": "Autonomous Monitoring System for Solar Power Stations (GES)",
       "description": {
-        "tr": "Kişisel teknik blog ve araştırma defteri — Next.js statik export, Decap CMS, MDX + KaTeX + Mermaid.",
-        "en": "Personal technical blog and research notebook — Next.js static export, Decap CMS, MDX + KaTeX + Mermaid."
+        "tr": "Güneş Enerjisi Santrallerinde (GES) meydana gelen hotspot, mikro çatlak ve tozlanma gibi anormallikleri İHA verileriyle otonom olarak tespit etmek; ardından geliştirdiğim optimizasyon (MILP/VRP) algoritmalarıyla en uygun kestirimci bakım planını ve saha rotasını çıkarmak üzere kurguladığım projem.",
+        "en": "This is a project I have designed to autonomously detect anomalies such as hotspots, micro-cracks and dust accumulation in solar power plants (SPPs) using UAV data; and subsequently to derive the most suitable predictive maintenance plan and site route using the optimisation (MILP/VRP) algorithms I have developed."
       },
-      "tags": [
-        "Next.js",
-        "MDX",
-        "KaTeX",
-        "Mermaid"
-      ],
-      "link": "https://github.com/burakerguvn/burakerguvn.github.io"
+      "tags": ["Python", "Numpy", "Pandas", "YOLO"],
+      "link": "https://github.com/BurakErguvn/spp-autonomous-control-system"
     }
   ],
   "languages": [
@@ -163,10 +140,10 @@
         "en": "English"
       },
       "level": {
-        "tr": "İleri (C1)",
-        "en": "Advanced (C1)"
+        "tr": "",
+        "en": ""
       }
     }
   ],
-  "email": "ornek@eposta.com"
+  "email": "erguvenburak.dev@gmail.com"
 }

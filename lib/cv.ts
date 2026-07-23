@@ -44,6 +44,7 @@ export interface CertItem {
   name: L;
   issuer: string;
   year: string;
+  link?: string;
 }
 
 export interface LangItem {
