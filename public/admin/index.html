@@ -6,14 +6,20 @@
     <meta name="robots" content="noindex" />
     <title>İçerik Yöneticisi — burakerguvn.github.io</title>
     <link rel="icon" href="data:," />
-
-    <!-- KaTeX (matematik önizleme) -->
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
     />
+  </head>
+  <body>
+    <!--
+      GitHub Pages üzerinde Decap auth için bir OAuth proxy gerekir.
+      Proxy: https://decap-proxy.erguvenburak-dev.workers.dev (Cloudflare Worker).
+      GitHub OAuth App callback URL: https://decap-proxy.erguvenburak-dev.workers.dev/callback
+      base_url + auth_endpoint config.yml içinde tanımlı.
+    -->
 
-    <!-- Decap CMS -->
+    <!-- Decap CMS (body sonunda yüklenmeli; head'de yüklenince body yokken mount başarısız olur) -->
     <script src="https://unpkg.com/decap-cms@^3.6.0/dist/decap-cms.js"></script>
 
     <!-- Önizleme bağımlılıkları -->
@@ -25,56 +31,44 @@
       mermaid.initialize({ startOnLoad: false, theme: "neutral" });
       window.__mermaid = mermaid;
     </script>
-  </head>
-  <body>
-    <!--
-      GitHub Pages üzerinde Decap auth için bir OAuth proxy gerekir.
-      Proxy: https://decap-proxy.erguvenburak-dev.workers.dev
-      (Cloudflare Worker). GitHub OAuth App callback URL:
-      https://decap-proxy.erguvenburak-dev.workers.dev/callback
-      base_url + auth_endpoint config.yml içinde tanımlı.
-    -->
 
     <script>
       (function () {
         var CMS = window.CMS;
         if (!CMS || !window.createClass || !window.h) return;
 
-        // ---------- önizleme stili (site görsel diliyle uyumlu) ----------
-        // KaTeX CSS'ini önizleme iframe'ine enjekte et (parent <head>'i iframe'e uygulanmaz)
+        var PREVIEW_CSS =
+          ".pv-shell{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111;background:#fff;max-width:680px;margin:0 auto;padding:2rem 1.25rem 6rem;line-height:1.65}" +
+          ".pv-eyebrow{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#666;margin:0 0 .5rem}" +
+          ".pv-shell h1{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:2rem;line-height:1.15;margin:.2rem 0 .6rem;font-weight:600}" +
+          ".pv-dek{font-size:1.05rem;color:#444;margin:0 0 1rem}" +
+          ".pv-meta{font-size:.8rem;color:#777;margin:0 0 1.5rem}" +
+          ".pv-prose{font-size:1.02rem}" +
+          ".pv-prose h2{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:1.4rem;margin:2rem 0 .6rem;font-weight:600}" +
+          ".pv-prose h3{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:1.15rem;margin:1.6rem 0 .5rem;font-weight:600}" +
+          ".pv-prose p{margin:0 0 1rem}" +
+          ".pv-prose a{color:#1d4ed8;text-decoration:underline}" +
+          ".pv-prose ul,.pv-prose ol{margin:0 0 1rem 1.25rem}" +
+          ".pv-prose li{margin:.25rem 0}" +
+          ".pv-prose blockquote{border-left:3px solid #ddd;margin:0 0 1rem;padding:0 0 0 1rem;color:#555}" +
+          ".pv-prose code{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:.9em;background:#f4f4f5;padding:.12em .35em;border-radius:4px}" +
+          ".pv-prose pre{background:#0b0b0c;color:#e6e6e6;padding:1rem;border-radius:8px;overflow:auto;margin:0 0 1rem}" +
+          ".pv-prose pre code{background:none;padding:0;color:inherit;font-size:.85rem}" +
+          ".pv-prose img{max-width:100%;height:auto;border-radius:6px}" +
+          ".pv-prose table{border-collapse:collapse;margin:0 0 1rem}" +
+          ".pv-prose th,.pv-prose td{border:1px solid #ddd;padding:.4rem .6rem}" +
+          ".pv-callout{border:1px solid #d8d8d8;border-left:3px solid #1d4ed8;background:#fafafa;border-radius:6px;padding:.9rem 1rem;margin:0 0 1.2rem}" +
+          ".pv-callout__title{font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#1d4ed8;margin:0 0 .4rem}" +
+          ".pv-callout--theorem{border-left-color:#7c3aed}.pv-callout--theorem .pv-callout__title{color:#7c3aed}" +
+          ".pv-callout--definition{border-left-color:#0f766e}.pv-callout--definition .pv-callout__title{color:#0f766e}" +
+          ".pv-callout--lemma{border-left-color:#b45309}.pv-callout--lemma .pv-callout__title{color:#b45309}" +
+          ".pv-mermaid{display:flex;justify-content:center;margin:0 0 1.2rem}";
+
         CMS.registerPreviewStyle(
           "https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
         );
-        var PREVIEW_CSS = `
-        .pv-shell{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#111;background:#fff;max-width:680px;margin:0 auto;padding:2rem 1.25rem 6rem;line-height:1.65}
-        .pv-eyebrow{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:#666;margin:0 0 .5rem}
-        .pv-shell h1{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:2rem;line-height:1.15;margin:.2rem 0 .6rem;font-weight:600}
-        .pv-dek{font-size:1.05rem;color:#444;margin:0 0 1rem}
-        .pv-meta{font-size:.8rem;color:#777;margin:0 0 1.5rem}
-        .pv-prose{font-size:1.02rem}
-        .pv-prose h2{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.4rem;margin:2rem 0 .6rem;font-weight:600}
-        .pv-prose h3{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:1.15rem;margin:1.6rem 0 .5rem;font-weight:600}
-        .pv-prose p{margin:0 0 1rem}
-        .pv-prose a{color:#1d4ed8;text-decoration:underline}
-        .pv-prose ul,.pv-prose ol{margin:0 0 1rem 1.25rem}
-        .pv-prose li{margin:.25rem 0}
-        .pv-prose blockquote{border-left:3px solid #ddd;margin:0 0 1rem;padding:0 0 0 1rem;color:#555}
-        .pv-prose code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.9em;background:#f4f4f5;padding:.12em .35em;border-radius:4px}
-        .pv-prose pre{background:#0b0b0c;color:#e6e6e6;padding:1rem;border-radius:8px;overflow:auto;margin:0 0 1rem}
-        .pv-prose pre code{background:none;padding:0;color:inherit;font-size:.85rem}
-        .pv-prose img{max-width:100%;height:auto;border-radius:6px}
-        .pv-prose table{border-collapse:collapse;margin:0 0 1rem}
-        .pv-prose th,.pv-prose td{border:1px solid #ddd;padding:.4rem .6rem}
-        .pv-callout{border:1px solid #d8d8d8;border-left:3px solid #1d4ed8;background:#fafafa;border-radius:6px;padding:.9rem 1rem;margin:0 0 1.2rem}
-        .pv-callout__title{font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:#1d4ed8;margin:0 0 .4rem}
-        .pv-callout--theorem{border-left-color:#7c3aed}.pv-callout--theorem .pv-callout__title{color:#7c3aed}
-        .pv-callout--definition{border-left-color:#0f766e}.pv-callout--definition .pv-callout__title{color:#0f766e}
-        .pv-callout--lemma{border-left-color:#b45309}.pv-callout--lemma .pv-callout__title{color:#b45309}
-        .pv-mermaid{display:flex;justify-content:center;margin:0 0 1.2rem}
-        `;
         CMS.registerPreviewStyle(PREVIEW_CSS, { raw: true });
 
-        // ---------- yardımcılar ----------
         function esc(s) {
           return String(s == null ? "" : s)
             .replace(/&/g, "&amp;")
@@ -82,7 +76,6 @@
             .replace(/>/g, "&gt;");
         }
 
-        // MDX özel bileşenlerini çıkarıp placeholder'a koy; iç markdown parse edilir.
         function extractBlocks(md) {
           var store = [];
           function stash(label, kind, inner) {
@@ -128,7 +121,9 @@
         function renderMermaid(container) {
           var mermaid = window.__mermaid;
           if (!mermaid) return;
-          var nodes = Array.from(container.querySelectorAll("code.language-mermaid"));
+          var nodes = Array.prototype.slice.call(
+            container.querySelectorAll("code.language-mermaid")
+          );
           nodes.forEach(function (codeEl, i) {
             var pre = codeEl.parentElement;
             if (!pre || pre.tagName !== "PRE") return;
@@ -160,7 +155,6 @@
           } catch (e) {}
         }
 
-        // ---------- önizleme bileşeni fabrikası ----------
         function makePreview(eyebrow) {
           return window.createClass({
             componentDidMount: function () {
