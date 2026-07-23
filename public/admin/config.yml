@@ -28,11 +28,15 @@ backend:
 media_folder: "public/uploads"
 public_folder: "/uploads"
 
-# İki dilli: her post için index.tr.mdx ve index.en.mdx
-i18n:
-  structure: multiple_files
-  locales: [tr, en]
-  default_locale: tr
+# ÖNEMLİ: Üst seviye i18n KULLANMIYORUZ.
+# Decap dokümantasyonuna göre "files" koleksiyonları yalnızca "single_file"
+# yapısını destekler. Üst seviyede "multiple_files" tanımlarsak bu, CV gibi
+# "files" koleksiyonlarına miras kalır ve `i18n: false` bile çakışmayı tam
+# engelleyemez → publish client-side `undefined` ile reddeder (ağ isteği
+# hiç gitmez), ardından react-toastify hata bildirimi #130 ile çöker.
+# Bu yüzden i18n'i yalnızca ihtiyaç duyan "folder" koleksiyonlarına taşıyoruz.
+# CV (files koleksiyonu) tamamen i18n'sizdir; iki dillilik {tr,en} nesneleri
+# içinde zaten içerik seviyesinde çözülüyor.
 
 collections:
   - name: posts
@@ -45,7 +49,10 @@ collections:
     format: frontmatter
     slug: "{{slug}}"
     path: "{{slug}}/index"
-    i18n: true
+    i18n:
+      structure: multiple_files
+      locales: [tr, en]
+      default_locale: tr
     summary: "{{title}} — {{date}}"
     fields:
       - { name: title, label: "Başlık / Title", widget: string, i18n: true }
@@ -65,7 +72,10 @@ collections:
     format: frontmatter
     slug: "{{slug}}"
     path: "{{slug}}/index"
-    i18n: true
+    i18n:
+      structure: multiple_files
+      locales: [tr, en]
+      default_locale: tr
     summary: "{{title}} — {{date}}"
     fields:
       - { name: title, label: "Başlık / Title", widget: string, i18n: true }
@@ -85,7 +95,10 @@ collections:
     format: frontmatter
     slug: "{{slug}}"
     path: "{{slug}}/index"
-    i18n: true
+    i18n:
+      structure: multiple_files
+      locales: [tr, en]
+      default_locale: tr
     summary: "{{title}} — {{date}}"
     fields:
       - { name: title, label: "Başlık / Title", widget: string, i18n: true }
@@ -95,14 +108,12 @@ collections:
       - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
 
-  # Özgeçmiş — tek JSON dosyası (i18n'siz; iki dillilik {tr,en} nesneleri içinde)
-  # Üst seviye i18n (multiple_files) bu koleksiyona miras kalırsa Decap save'de
-  # tek cv.json'ı cv.tr.json/cv.en.json olarak bölmeye çalışıp #130 veriyor →
-  # bu yüzden koleksiyonu i18n'den açıkça çıkarıyoruz.
+  # Özgeçmiş — tek JSON dosyası. Hiçbir i18n yapılandırması yok; bu bir
+  # "files" koleksiyonu olduğu için multiple_files ile çakışmaması gerekir.
+  # İki dillilik {tr,en} nesneleri içinde içerik seviyesinde çözülür.
   - name: cv
     label: "Özgeçmiş / CV"
     delete: false
-    i18n: false
     editor:
       preview: false
     files:
