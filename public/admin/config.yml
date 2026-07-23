@@ -42,7 +42,7 @@ collections:
     create: true
     delete: true
     extension: mdx
-    format: mdx
+    format: frontmatter
     slug: "{{slug}}"
     path: "{{slug}}/index"
     i18n: true
@@ -62,7 +62,7 @@ collections:
     create: true
     delete: true
     extension: mdx
-    format: mdx
+    format: frontmatter
     slug: "{{slug}}"
     path: "{{slug}}/index"
     i18n: true
