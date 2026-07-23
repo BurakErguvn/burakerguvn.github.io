@@ -94,3 +94,186 @@ collections:
       - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: true }
       - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
+
+  # Özgeçmiş — tek JSON dosyası (i18n'siz; iki dillilik {tr,en} nesneleri içinde)
+  - name: cv
+    label: "Özgeçmiş / CV"
+    delete: false
+    files:
+      - name: cv
+        label: "Özgeçmiş / CV"
+        file: content/cv/cv.json
+        fields:
+          - { name: name, label: "Ad / Name", widget: string }
+          - label: "Ünvan / Title"
+            name: title
+            widget: object
+            collapsed: true
+            fields:
+              - { name: tr, label: "Türkçe", widget: string }
+              - { name: en, label: "English", widget: string }
+          - label: "Konum / Location"
+            name: location
+            widget: object
+            collapsed: true
+            fields:
+              - { name: tr, label: "Türkçe", widget: string }
+              - { name: en, label: "English", widget: string }
+          - { name: email, label: "E-posta / Email", widget: string }
+          - label: "Bağlantılar / Links"
+            name: links
+            widget: object
+            collapsed: true
+            fields:
+              - { name: github, label: "GitHub", widget: string, required: false }
+              - { name: linkedin, label: "LinkedIn", widget: string, required: false }
+              - { name: scholar, label: "Google Scholar", widget: string, required: false }
+          - { name: avatar, label: "Avatar yolu / Avatar path", widget: string, required: false }
+          - label: "Özet / Summary"
+            name: summary
+            widget: object
+            collapsed: true
+            fields:
+              - { name: tr, label: "Türkçe", widget: text }
+              - { name: en, label: "English", widget: text }
+          - label: "Eğitim / Education"
+            name: education
+            widget: list
+            collapsed: true
+            fields:
+              - label: "Derece / Degree"
+                name: degree
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - { name: institution, label: "Kurum / Institution", widget: string }
+              - { name: start, label: "Başlangıç / Start", widget: string }
+              - label: "Bitiş / End"
+                name: end
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - label: "Not / Note"
+                name: note
+                widget: object
+                collapsed: true
+                required: false
+                fields:
+                  - { name: tr, label: "Türkçe", widget: text }
+                  - { name: en, label: "English", widget: text }
+          - label: "Araştırma İlgi Alanları / Research Interests"
+            name: researchInterests
+            widget: list
+            collapsed: true
+            fields:
+              - { name: tr, label: "Türkçe", widget: string }
+              - { name: en, label: "English", widget: string }
+          - label: "Yetenekler / Skills"
+            name: skills
+            widget: list
+            collapsed: true
+            fields:
+              - label: "Kategori / Category"
+                name: category
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - label: "Maddeler / Items"
+                name: items
+                widget: list
+          - label: "Deneyim / Experience"
+            name: experience
+            widget: list
+            collapsed: true
+            fields:
+              - label: "Rol / Role"
+                name: role
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - { name: org, label: "Kurum / Org", widget: string }
+              - { name: start, label: "Başlangıç / Start", widget: string }
+              - label: "Bitiş / End"
+                name: end
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - label: "Açıklama / Description"
+                name: description
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: text }
+                  - { name: en, label: "English", widget: text }
+          - label: "Projeler / Projects"
+            name: projects
+            widget: list
+            collapsed: true
+            fields:
+              - { name: name, label: "Ad / Name", widget: string }
+              - label: "Açıklama / Description"
+                name: description
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: text }
+                  - { name: en, label: "English", widget: text }
+              - label: "Etiketler / Tags"
+                name: tags
+                widget: list
+                required: false
+              - { name: link, label: "Bağlantı / Link", widget: string, required: false }
+          - label: "Yayınlar / Publications"
+            name: publications
+            widget: list
+            collapsed: true
+            required: false
+            fields:
+              - { name: title, label: "Başlık / Title", widget: string }
+              - { name: venue, label: "Yer / Venue", widget: string }
+              - { name: year, label: "Yıl / Year", widget: string }
+              - { name: link, label: "Bağlantı / Link", widget: string, required: false }
+          - label: "Sertifikalar / Certifications"
+            name: certifications
+            widget: list
+            collapsed: true
+            required: false
+            fields:
+              - label: "Ad / Name"
+                name: name
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - { name: issuer, label: "Veren / Issuer", widget: string }
+              - { name: year, label: "Yıl / Year", widget: string }
+          - label: "Diller / Languages"
+            name: languages
+            widget: list
+            collapsed: true
+            fields:
+              - label: "Dil / Name"
+                name: name
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }
+              - label: "Seviye / Level"
+                name: level
+                widget: object
+                collapsed: true
+                fields:
+                  - { name: tr, label: "Türkçe", widget: string }
+                  - { name: en, label: "English", widget: string }

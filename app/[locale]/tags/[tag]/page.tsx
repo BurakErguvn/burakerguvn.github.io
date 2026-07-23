@@ -4,7 +4,7 @@ import {
   getPostsByTagSlug,
   collectionRoute,
 } from "@/lib/content";
-import { locales, type Locale } from "@/lib/i18n";
+import { locales, dict, type Locale } from "@/lib/i18n";
 
 export function generateStaticParams() {
   const slugs = new Set<string>();
@@ -20,6 +20,7 @@ export default function TagPage({
   params: { locale: Locale; tag: string };
 }) {
   const posts = getPostsByTagSlug(params.locale, params.tag);
+  const t = dict[params.locale];
   return (
     <div className="main-col">
       <h1>#{params.tag}</h1>
@@ -27,6 +28,7 @@ export default function TagPage({
         posts={posts}
         locale={params.locale}
         route={collectionRoute.posts}
+        emptyLabel={t.noPostsForTag}
       />
     </div>
   );

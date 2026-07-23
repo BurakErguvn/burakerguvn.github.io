@@ -10,7 +10,7 @@ export default function TagsPage({ params }: { params: { locale: Locale } }) {
     <div className="main-col">
       <h1>{t.tags}</h1>
       {tags.length === 0 ? (
-        <p className="eyebrow">{t.noPosts}</p>
+        <p className="eyebrow">{t.noTags}</p>
       ) : (
         <ul className="post-list">
           {tags.map(({ tag, count }) => (
