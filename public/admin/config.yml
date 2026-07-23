@@ -51,7 +51,7 @@ collections:
       - { name: title, label: "Başlık / Title", widget: string, i18n: true }
       - { name: dek, label: "Alt başlık / Dek", widget: string, required: false, i18n: true }
       - { name: date, label: "Tarih / Date", widget: datetime, i18n: duplicate }
-      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: duplicate }
+      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: true }
       - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
 
@@ -71,6 +71,6 @@ collections:
       - { name: title, label: "Başlık / Title", widget: string, i18n: true }
       - { name: dek, label: "Alt başlık / Dek", widget: string, required: false, i18n: true }
       - { name: date, label: "Tarih / Date", widget: datetime, i18n: duplicate }
-      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: duplicate }
+      - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: true }
       - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
