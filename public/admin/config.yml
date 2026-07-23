@@ -105,6 +105,8 @@ collections:
       - name: cv
         label: "Özgeçmiş / CV"
         file: content/cv/cv.json
+        editor:
+          preview: false
         fields:
           - { name: name, label: "Ad / Name", widget: string }
           - label: "Ünvan / Title"

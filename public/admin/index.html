@@ -202,6 +202,115 @@
         CMS.registerPreviewTemplate("posts", makePreview("Writing · Yazı"));
         CMS.registerPreviewTemplate("research", makePreview("Research · Araştırma"));
         CMS.registerPreviewTemplate("notes", makePreview("Notes · Not"));
+
+        // ---------- CV önizlemesi ----------
+        // Varsayılan önizleme, iç içe object/list yapısında #130 veriyor;
+        // bu yüzden CV için güvenli, özel bir şablon kaydederiz.
+        function pickField(obj, key) {
+          var v = obj ? obj[key] : null;
+          if (v == null) return "";
+          if (typeof v === "object") return v.tr || v.en || "";
+          return String(v);
+        }
+        function toArr(value) {
+          if (!value) return [];
+          if (value.toJS) value = value.toJS();
+          return Array.isArray(value) ? value : [];
+        }
+        var CvPreview = window.createClass({
+          render: function () {
+            var entry = this.props.entry;
+            function get(p) { return entry.getIn(["data"].concat(p)); }
+            function s(p) { var v = get(p); return v == null ? "" : String(v); }
+            function pick(p) {
+              var v = get(p);
+              if (v == null) return "";
+              if (v.toJS) v = v.toJS();
+              return typeof v === "object" ? (v.tr || v.en || "") : String(v);
+            }
+
+            var name = s(["name"]);
+            var title = pick(["title"]);
+            var location = pick(["location"]);
+            var email = s(["email"]);
+            var summary = pick(["summary"]);
+            var education = toArr(get(["education"]));
+            var research = toArr(get(["researchInterests"]));
+            var skills = toArr(get(["skills"]));
+            var experience = toArr(get(["experience"]));
+            var projects = toArr(get(["projects"]));
+            var pubs = toArr(get(["publications"]));
+            var certs = toArr(get(["certifications"]));
+            var langs = toArr(get(["languages"]));
+
+            var kids = [];
+            kids.push(window.h("h1", { className: "pv-h1" }, name));
+            if (title) kids.push(window.h("p", { className: "pv-eyebrow" }, title));
+            if (location || email) {
+              kids.push(
+                window.h("p", { className: "pv-meta" },
+                  [location, email].filter(Boolean).join(" · "))
+              );
+            }
+            if (summary) kids.push(window.h("p", { className: "pv-p" }, summary));
+
+            function section(label, items, render) {
+              if (!items.length) return;
+              kids.push(window.h("h2", { className: "pv-h2" }, label));
+              kids.push(
+                window.h("ul", { className: "pv-ul" },
+                  items.map(function (it, i) {
+                    return window.h("li", { key: i }, render(it));
+                  })
+                )
+              );
+            }
+
+            section("Eğitim / Education", education, function (e) {
+              return pickField(e, "degree") + " — " + pickField(e, "institution") +
+                " (" + pickField(e, "start") + "–" + pickField(e, "end") + ")" +
+                (pickField(e, "note") ? ". " + pickField(e, "note") : "");
+            });
+            section("İlgi Alanları / Research Interests", research, function (r) {
+              return pickField(r, "tr") || pickField(r, "en");
+            });
+            if (skills.length) {
+              kids.push(window.h("h2", { className: "pv-h2" }, "Yetenekler / Skills"));
+              kids.push(
+                window.h("ul", { className: "pv-ul" },
+                  skills.map(function (g, i) {
+                    var items = (g.items || []).join(", ");
+                    return window.h("li", { key: i },
+                      pickField(g, "category") + ": " + items);
+                  })
+                )
+              );
+            }
+            section("Deneyim / Experience", experience, function (e) {
+              return pickField(e, "role") + " — " + pickField(e, "org") +
+                " (" + pickField(e, "start") + "–" + pickField(e, "end") + "). " +
+                pickField(e, "description");
+            });
+            section("Projeler / Projects", projects, function (p) {
+              return pickField(p, "name") +
+                (pickField(p, "description") ? " — " + pickField(p, "description") : "") +
+                (pickField(p, "link") ? " · " + pickField(p, "link") : "");
+            });
+            section("Yayınlar / Publications", pubs, function (p) {
+              return pickField(p, "title") + " — " + pickField(p, "venue") + ", " + pickField(p, "year");
+            });
+            section("Sertifikalar / Certifications", certs, function (c) {
+              return pickField(c, "name") + " — " + pickField(c, "issuer") + ", " + pickField(c, "year") +
+                (pickField(c, "link") ? " · " + pickField(c, "link") : "");
+            });
+            section("Diller / Languages", langs, function (l) {
+              return pickField(l, "name") + " (" + pickField(l, "level") + ")";
+            });
+
+            return window.h("div", { className: "pv-shell" }, kids);
+          },
+        });
+        CMS.registerPreviewTemplate("cv", CvPreview);
       })();
     </script>
   </body>
