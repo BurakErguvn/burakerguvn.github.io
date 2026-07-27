@@ -1,6 +1,31 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllTags, tagSlug } from "@/lib/content";
 import { dict, type Locale } from "@/lib/i18n";
+
+export function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale };
+}): Metadata {
+  const locale = params.locale;
+  const t = dict[locale];
+  const descriptions: Record<Locale, string> = {
+    tr: "Yazı ve araştırma etiketleri.",
+    en: "Tags for writing and research.",
+  };
+  return {
+    title: t.tags,
+    description: descriptions[locale],
+    alternates: {
+      canonical: `/${locale}/tags/`,
+      languages: {
+        tr: `/tr/tags/`,
+        en: `/en/tags/`,
+      },
+    },
+  };
+}
 
 export default function TagsPage({ params }: { params: { locale: Locale } }) {
   const locale = params.locale;

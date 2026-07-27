@@ -5,6 +5,7 @@ import {
   collectionRoute,
 } from "@/lib/content";
 import { locales, dict, type Locale } from "@/lib/i18n";
+import type { Metadata } from "next";
 
 export function generateStaticParams() {
   const slugs = new Set<string>();
@@ -16,6 +17,30 @@ export function generateStaticParams() {
   // içerik boşken placeholder döndür.
   if (tags.length === 0) return [{ tag: "__none__" }];
   return tags.map((tag) => ({ tag }));
+}
+
+export function generateMetadata({
+  params,
+}: {
+  params: { locale: Locale; tag: string };
+}): Metadata {
+  if (params.tag === "__none__") return {};
+  const locale = params.locale;
+  const descriptions: Record<Locale, string> = {
+    tr: `"${params.tag}" etiketli yazılar.`,
+    en: `Posts tagged "${params.tag}".`,
+  };
+  return {
+    title: `#${params.tag}`,
+    description: descriptions[locale],
+    alternates: {
+      canonical: `/${locale}/tags/${params.tag}/`,
+      languages: {
+        tr: `/tr/tags/${params.tag}/`,
+        en: `/en/tags/${params.tag}/`,
+      },
+    },
+  };
 }
 
 export default function TagPage({

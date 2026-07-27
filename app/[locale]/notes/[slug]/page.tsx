@@ -19,15 +19,31 @@ export function generateMetadata({
   if (params.slug === "__none__") return {};
   const post = getPost("notes", params.slug, params.locale);
   if (!post) return {};
+  const url = `/${params.locale}/notes/${params.slug}/`;
   return {
     title: post.title,
     description: post.dek || undefined,
     alternates: {
-      canonical: `/${params.locale}/notes/${params.slug}/`,
+      canonical: url,
       languages: {
         tr: `/tr/notes/${params.slug}/`,
         en: `/en/notes/${params.slug}/`,
       },
+    },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.dek || undefined,
+      url,
+      publishedTime: post.date || undefined,
+      tags: post.tags,
+      images: [{ url: "/og.png", width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.dek || undefined,
+      images: ["/og.png"],
     },
   };
 }

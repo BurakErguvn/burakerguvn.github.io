@@ -14,7 +14,13 @@ export function generateMetadata({
   return {
     title: dict[params.locale].about,
     description: params.locale === "tr" ? cv.summary.tr : cv.summary.en,
-    alternates: { canonical: `/${params.locale}/about/` },
+    alternates: {
+      canonical: `/${params.locale}/about/`,
+      languages: {
+        tr: `/tr/about/`,
+        en: `/en/about/`,
+      },
+    },
   };
 }
 

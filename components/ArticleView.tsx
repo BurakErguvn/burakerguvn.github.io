@@ -13,6 +13,11 @@ import {
 } from "@/lib/content";
 import { buildToc } from "@/lib/toc";
 import { dict, locales, type Locale } from "@/lib/i18n";
+import {
+  blogPostingJsonLd,
+  articleBreadcrumbs,
+  jsonLdScript,
+} from "@/lib/jsonld";
 
 export function ArticleView({
   post,
@@ -37,8 +42,14 @@ export function ArticleView({
     hrefs[l] = `/${l}/${route}/${post.slug}/`;
   }
 
+  const jsonLd = [blogPostingJsonLd(post, locale), articleBreadcrumbs(post, locale)];
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
+      />
       <div className="main-col">
         <article className="prose">
           <header className="article-header">
