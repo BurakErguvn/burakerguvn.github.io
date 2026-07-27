@@ -1,0 +1,93 @@
+---
+title: "Finding Faults Isn't Enough: Optimizing Solar Maintenance"
+dek: "From drone imagery to a maintenance route—architecture, YOLO metrics, MILP/CVRP, and ROI in one decision loop."
+date: "2026-07-27"
+tags:
+  - "solar"
+  - "YOLO"
+  - "optimization"
+  - "drone"
+  - "predictive maintenance"
+draft: false
+---
+
+At a solar plant, finding a fault is often treated as the end of the job. Panels are scanned with a thermal camera, a hot cell is found, and a ticket is opened. But the ticket still says nothing about when the fault should be handled, which crew should take it, or what waiting will cost.
+
+For this project I built a decision-support system spanning thermal imagery to maintenance routes. It detects three fault classes, makes maintenance decisions under cost and capacity constraints, and assigns selected jobs to crews. The hard part was not getting each step to run on its own; it was making every step leave reliable data for the next one.
+
+## Why Detection Alone Falls Short
+
+A solar site may contain hundreds or thousands of panels. Hotspots carry fire risk, while micro-cracks can grow over time. Soiling looks less urgent but reduces yield continuously. Giving all three the same priority wastes limited maintenance capacity.
+
+That meant a bounding box around a panel was not enough. Each result also needed a panel ID, fault type, confidence score, and location. Only then could the optimization layer calculate which faults could wait.
+
+<Callout label="Key idea">
+I did not treat model output as a ready-made task list. A separate decision layer evaluates cost, safety, and crew capacity first.
+</Callout>
+
+## A Four-Layer Loosely Coupled Architecture
+
+The first design had blurry module boundaries. Image loading, prediction, and UI code lived in the same flow, which made it difficult to test optimization without the model. I split the system into four independent modules and used JSON files instead of shared memory or a live API.
+
+```mermaid
+flowchart LR
+  EE["Data feeder"] --> CS["AI inference"]
+  CS -->|"ariza_verileri.json"| IE["Optimization"]
+  IE -->|"gorev_cizelgesi.json"| GUI["Digital twin"]
+  CS -.->|"json"| GUI
+```
+
+The data layer feeds scenario imagery and metadata in sequence. I used the DJI Matrice 350 RTK and Zenmuse H20T as the hardware reference. The camera has 640×512 thermal resolution; at roughly 20 meters, I calculated a ground sampling distance of 2.5 cm/pixel. The prototype does not fly a real mission—it simulates the stream with recorded images.
+
+YOLO26s predictions are written to `ariza_verileri.json`. The optimization module reads that file, selects maintenance jobs with MILP, and builds crew routes with CVRP. It writes `gorev_cizelgesi.json`, which the PyQt6 interface displays on the panel map. This boundary let me test the solver with synthetic faults while the model was offline and develop the interface without changing optimization code.
+
+## YOLO26: How Accurate Is Detection?
+
+I chose YOLO26s. The Roboflow SOLAR PANEL DET set had 15 labels; I remapped them into three project classes: `hotspot`, `mikro_catlak` (micro-crack), and `tozlanma` (soiling). I trained locally for 70 epochs with batch 16 and 640 px inputs.
+
+Local training was more tiring than I expected. Several attempts died because VRAM filled up or thermal throttling kicked in. The completed 70-epoch run took about two and a half hours; rather than pushing for a longer run, I kept augmentation light and tried to get one stable training session. The first number I checked was overall mAP, and honestly I expected it to be higher.
+
+![YOLO26 training and validation metrics over 70 epochs](/images/posts/arizayi-bulmak-yetmez/yolo26-training-results.png)
+*Training losses decrease steadily while mAP plateaus in the final epochs. The slight rise in validation classification loss points to a generalization limit in the weaker classes.*
+
+| Class | mAP@0.5 | Precision | Recall |
+| --- | ---: | ---: | ---: |
+| Hotspot | 80.5% | 70.1% | 81.1% |
+| Micro-crack | 31.9% | 44.3% | 31.7% |
+| Soiling | 21.7% | 36.4% | 22.8% |
+
+Overall mAP@0.5 was about 0.447 and mAP@0.5:0.95 was 0.316. The per-class table was more informative. A distinct thermal signature lifted hotspot performance to 80.5% mAP@0.5, while thin micro-crack features disappeared when images were reduced to 640 pixels. Soiling also depended more heavily on RGB cues. The split showed that despite the low overall average, the model was usable on the safety-critical class.
+
+## Select with MILP, Route with CVRP
+
+Optimization runs in two stages. First I collapse multiple detections on the same panel into a single fault. Then I make a binary choice per panel: fix today ($x_i=1$) or defer ($x_i=0$).
+
+$$
+\min \sum_{i \in P} \big[ x_i \cdot M_i + (1-x_i) \cdot O_i \big]
+$$
+
+$M_i$ is maintenance cost; $O_i$ is a 30-day opportunity cost (lost energy priced in currency). Hotspots and micro-cracks are mandatory (`must_fix`) for safety. Soiling is deferred when it is not economical. Capacity is explicit: total service time $\le$ 3 crews × 480 minutes.
+
+Selected panels enter a capacitated vehicle routing problem (CVRP). With PuLP and CBC, I minimize fuel cost while respecting each crew’s daily shift. MTZ constraints prevent invalid routes that cycle away from the depot. If the solver does not return within 60 seconds, a capacity-aware nearest-neighbor heuristic takes over.
+
+Three scenarios exposed different solver decisions. Scenario A, with light soiling, produced no tasks because the 30-day loss did not justify maintenance cost. In B, two hotspots became mandatory jobs. In C, 600 minutes of work across ten micro-cracks was divided among three crews.
+
+## Scenario Savings and Yearly ROI
+
+In a single-tour comparison with run-to-failure and periodic maintenance, detection time fell to hours, and energy loss dropped substantially in scenarios B and C. My first report draft grouped these results under one “savings” percentage. Once I separated the components, I could no longer defend that presentation.
+
+![Detection time by maintenance method and scenario](/images/posts/arizayi-bulmak-yetmez/detection-time.png)
+*Detection and response time for the autonomous system ranges from 1 to 11 hours, depending on scenario workload.*
+
+Operational speed and energy-loss claims are measurable and sturdy. The roughly 50% materials saving leans on an assumption that run-to-failure replaces 70% of affected panels while the autonomous path replaces 30%; field calibration could pull that toward 20–25%. Scenario A’s “100% savings” is also a fake percentage: cost is zero because I did no work. The honest reading is that I blocked uneconomical maintenance.
+
+![Energy loss by maintenance method and scenario](/images/posts/arizayi-bulmak-yetmez/energy-loss.png)
+*Energy-loss values come from the scenario model; they are not field measurements.*
+
+The yearly calculation offered a more meaningful scale. I used roughly 500,000 TL/year as the traditional maintenance cost for a typical 10 MW plant. Amortizing hardware and software investment over five years put the autonomous system near 250,000 TL/year. Under those assumptions, annual net savings are 250,000 TL and payback is two years. The pessimistic case extends it to about four years.
+
+## Conclusion
+
+At the end of the prototype, I had more than a model drawing boxes around faults. Each image record passed through cost and capacity constraints before becoming an actionable maintenance plan on the map. Separating the four modules with JSON contracts also let me test that chain one piece at a time.
+
+Micro-crack and soiling performance is not yet ready for field use. Hotspot results and the optimization scenarios, however, show where the approach works and where it needs better data. That leaves two concrete next steps: continue training on stronger hardware and calibrate the panel-replacement assumptions in the ROI model with field data.
