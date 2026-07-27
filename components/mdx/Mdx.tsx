@@ -10,9 +10,11 @@ import { remarkMermaid } from "@/lib/remark-mermaid";
 import { Pre } from "./Pre";
 import { Mermaid } from "./Mermaid";
 import { Theorem, Definition, Lemma, Callout } from "./Callouts";
+import { ZoomableImg } from "./ZoomableImg";
 
 const components = {
   pre: Pre,
+  img: ZoomableImg,
   Mermaid,
   Theorem,
   Definition,

@@ -192,12 +192,12 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
 .hero .eyebrow { margin-bottom: 1.25rem; }
 .hero__title {
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: clamp(2.4rem, 6vw, 4rem);
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+  font-weight: 600;
+  font-size: clamp(2.6rem, 9vw, 6rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
   margin: 0 0 1.25rem;
-  max-width: 16ch;
+  max-width: 22ch;
 }
 .hero__char {
   display: inline-block;
@@ -215,6 +215,18 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   margin: 0 0 2rem;
 }
 .hero .entropy-divider { margin: 2.5rem 0 0; max-width: 12rem; }
+
+/* ---------- Dither hero ---------- */
+.dither-hero { position: relative; }
+.hero__dither {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  border-radius: var(--radius);
+}
+.dither-hero__fallback { transition: opacity 300ms ease; font-style: italic; }
+.dither-hero__fallback.is-hidden { opacity: 0; }
 
 /* ---------- Article header ---------- */
 .article-header { margin-bottom: 2.5rem; }
@@ -283,6 +295,35 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
 }
 .prose img { max-width: 100%; border-radius: var(--radius); }
 .prose a { text-decoration: underline; text-underline-offset: 3px; }
+
+/* tables (GFM) */
+.prose table {
+  border-collapse: collapse;
+  width: auto;
+  margin: 1.6rem 0;
+  font-size: 0.92rem;
+  font-variant-numeric: tabular-nums;
+  max-width: 100%;
+}
+.prose th, .prose td {
+  border: 1px solid var(--rule);
+  padding: 0.5rem 0.85rem;
+  text-align: left;
+}
+.prose th {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  background: var(--paper-raised);
+}
+.prose tbody tr:nth-child(even) { background: var(--paper-raised); }
+.prose td[style*="text-align:right"],
+.prose th[style*="text-align:right"] {
+  font-family: var(--font-mono);
+  white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .prose table { display: block; overflow-x: auto; }
+}
 
 /* heading anchors from rehype-autolink-headings */
 .prose h2 .anchor, .prose h3 .anchor {
@@ -363,6 +404,52 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
 .callout--note { border-left-color: var(--noise); }
 .callout__body p:last-child { margin-bottom: 0; }
 .callout__body p { max-width: 38rem; }
+
+/* ---------- Image lightbox ---------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(10, 12, 16, 0.92);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: zoom-out;
+  animation: lightbox-in 160ms ease;
+}
+.lightbox__img {
+  max-width: 92vw;
+  max-height: 86vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.lightbox__caption {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 0;
+  right: 0;
+  text-align: center;
+  color: #cfd3da;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  padding: 0 1.5rem;
+  pointer-events: none;
+}
+.lightbox__hint {
+  position: absolute;
+  top: 1rem;
+  right: 1.25rem;
+  color: #cfd3da;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  pointer-events: none;
+}
+@keyframes lightbox-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 /* ---------- Mermaid ---------- */
 .mermaid-wrap {

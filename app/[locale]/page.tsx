@@ -1,4 +1,4 @@
-import { EntropyHero } from "@/components/EntropyHero";
+import { DitherHero } from "@/components/DitherHero";
 import { PostList } from "@/components/PostList";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { getAllPostsByLocale, collectionRoute } from "@/lib/content";
@@ -10,13 +10,13 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
   const posts = getAllPostsByLocale(locale).slice(0, 6);
   const hero = {
     tr: {
-      title: "Belirsizlikten sinyale.",
-      accent: "sinyale.",
+      title: "düşünen makineler",
+      accent: "makineler",
       dek: "Veri bilimi, makine öğrenmesi ve kuantum hata düzeltme üzerine matematiksel ve algoritmik derinlikte bir araştırma defteri.",
     },
     en: {
-      title: "From uncertainty to signal.",
-      accent: "signal.",
+      title: "thinking machines",
+      accent: "machines",
       dek: "A research notebook on data science, machine learning and quantum error correction — with mathematical and algorithmic depth.",
     },
   }[locale];
@@ -26,7 +26,7 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
 
   return (
     <div className="main-col">
-      <EntropyHero
+      <DitherHero
         title={hero.title}
         accent={hero.accent}
         dek={hero.dek}
