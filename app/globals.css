@@ -471,20 +471,23 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   outline-offset: 2px;
 }
 .lightbox__diagram {
-  max-width: 94vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(1100px, 94vw);
   max-height: 88vh;
   overflow: auto;
   background: var(--paper-raised, #fff);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius);
-  padding: 1.5rem 2rem;
+  padding: 1.75rem 2rem;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  cursor: default;
 }
 .lightbox__diagram svg {
   display: block;
-  width: auto;
-  height: auto;
-  max-width: min(1400px, 90vw);
+  width: 100% !important;
+  height: auto !important;
   max-height: 82vh;
   margin: 0 auto;
 }
