@@ -10,7 +10,8 @@
  *   1. https://search.google.com/search-console → Add property
  *   2. HTML tag verification → copy content value
  *   3. Paste into GOOGLE_SITE_VERIFICATION below
- *   4. Submit sitemap: https://burakerguvn.github.io/sitemap.xml
+ *   4. Submit sitemap: https://burakerguvn.github.io/sitemap/sitemap.xml
+ *      (fallback: https://burakerguvn.github.io/sitemap.xml)
  */
 
 /** Cloudflare Web Analytics token. Leave empty until you have one. */

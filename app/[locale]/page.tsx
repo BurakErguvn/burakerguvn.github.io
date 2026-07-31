@@ -5,6 +5,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { getAllPostsByLocale, collectionRoute } from "@/lib/content";
 import { dict, locales, type Locale } from "@/lib/i18n";
 import { OG_IMAGE, SITE_URL } from "@/lib/jsonld";
+import { SITE_BRAND, siteDocumentTitle } from "@/lib/site";
 
 export function generateMetadata({
   params,
@@ -12,17 +13,14 @@ export function generateMetadata({
   params: { locale: Locale };
 }): Metadata {
   const locale = params.locale;
+  const title = siteDocumentTitle(locale);
   const descriptions: Record<Locale, string> = {
     tr: "Veri bilimi, makine öğrenmesi ve kuantum hata düzeltme üzerine matematiksel ve algoritmik derinlikte bir araştırma defteri.",
     en: "A research notebook on data science, machine learning and quantum error correction — with mathematical and algorithmic depth.",
   };
-  const titles: Record<Locale, string> = {
-    tr: "düşünen makineler",
-    en: "thinking machines",
-  };
 
   return {
-    title: { absolute: `Burak Ergüven — ${titles[locale]}` },
+    title: { absolute: title },
     description: descriptions[locale],
     alternates: {
       canonical: `/${locale}/`,
@@ -30,14 +28,15 @@ export function generateMetadata({
     },
     openGraph: {
       type: "website",
-      title: `Burak Ergüven — ${titles[locale]}`,
+      siteName: "Burak Ergüven",
+      title,
       description: descriptions[locale],
       url: `${SITE_URL}/${locale}/`,
-      images: [{ url: OG_IMAGE, width: 1200, height: 630 }],
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: SITE_BRAND[locale] }],
     },
     twitter: {
       card: "summary_large_image",
-      title: `Burak Ergüven — ${titles[locale]}`,
+      title,
       description: descriptions[locale],
       images: [OG_IMAGE],
     },
@@ -50,12 +49,12 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
   const posts = getAllPostsByLocale(locale).slice(0, 6);
   const hero = {
     tr: {
-      title: "düşünen makineler",
+      title: SITE_BRAND.tr,
       accent: "makineler",
       dek: "Veri bilimi, makine öğrenmesi ve kuantum hata düzeltme üzerine matematiksel ve algoritmik derinlikte bir araştırma defteri.",
     },
     en: {
-      title: "thinking machines",
+      title: SITE_BRAND.en,
       accent: "machines",
       dek: "A research notebook on data science, machine learning and quantum error correction — with mathematical and algorithmic depth.",
     },

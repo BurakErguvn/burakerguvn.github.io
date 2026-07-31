@@ -11,6 +11,7 @@ import {
   OG_IMAGE,
   SITE_URL,
 } from "@/lib/jsonld";
+import { SITE_BRAND, siteDocumentTitle } from "@/lib/site";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -23,6 +24,7 @@ export function generateMetadata({
 }): Metadata {
   if (!isLocale(params.locale)) return {};
   const locale = params.locale as Locale;
+  const title = siteDocumentTitle(locale);
   const ogLocale = locale === "tr" ? "tr_TR" : "en_US";
   const descriptions: Record<Locale, string> = {
     tr: "Kişisel teknik blog ve araştırma defteri: Veri Bilimi, ML/DL, Kuantum Hata Düzeltme ve Kuantum ML üzerine matematiksel ve algoritmik derinlikte yazılar.",
@@ -43,13 +45,13 @@ export function generateMetadata({
       siteName: "Burak Ergüven",
       locale: ogLocale,
       url: `${SITE_URL}/${locale}/`,
-      title: "Burak Ergüven — Blog",
+      title,
       description: descriptions[locale],
-      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: "düşünen makineler" }],
+      images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: SITE_BRAND[locale] }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Burak Ergüven — Blog",
+      title,
       description: descriptions[locale],
       images: [OG_IMAGE],
     },

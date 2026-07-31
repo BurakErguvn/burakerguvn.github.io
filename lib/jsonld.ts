@@ -5,6 +5,7 @@ import {
   collectionRoute,
 } from "@/lib/content";
 import { dict, type Locale } from "@/lib/i18n";
+import { SITE_BRAND, siteDocumentTitle } from "@/lib/site";
 
 export const SITE_URL = "https://burakerguvn.github.io";
 export const OG_IMAGE = `${SITE_URL}/og.png`;
@@ -42,12 +43,17 @@ export function websiteJsonLd(locale: Locale) {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "Burak Ergüven",
-    alternateName: "Blog",
+    name: siteDocumentTitle(locale),
+    alternateName: [cv.name, SITE_BRAND[locale]],
     url: `${SITE_URL}/${locale}/`,
     description: descriptions[locale],
     inLanguage: locale === "tr" ? "tr-TR" : "en-US",
     author: {
+      "@type": "Person",
+      name: cv.name,
+      url: SITE_URL,
+    },
+    publisher: {
       "@type": "Person",
       name: cv.name,
       url: SITE_URL,
