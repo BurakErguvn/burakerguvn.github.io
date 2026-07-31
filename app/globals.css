@@ -474,7 +474,7 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(1100px, 94vw);
+  max-width: 94vw;
   max-height: 88vh;
   overflow: auto;
   background: var(--paper-raised, #fff);
@@ -484,12 +484,15 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
   cursor: default;
 }
-.lightbox__diagram svg {
+.lightbox__diagram-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.lightbox__diagram-inner svg {
   display: block;
-  width: 100% !important;
-  height: auto !important;
-  max-height: 82vh;
-  margin: 0 auto;
+  max-width: min(1100px, 90vw);
+  max-height: 80vh;
 }
 
 /* ---------- Post list / feed ---------- */

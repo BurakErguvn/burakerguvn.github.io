@@ -1,51 +1,84 @@
 "use client";
 
-import { useEffect, useId, useState, type KeyboardEvent } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+} from "react";
 import { createPortal } from "react-dom";
 import mermaid from "mermaid";
 
 let counter = 0;
 
-/** Duplicate Mermaid SVGs share internal ids; remap so the lightbox copy renders. */
-function uniquifySvgIds(svg: string, prefix: string): string {
-  const ids = new Set<string>();
-  for (const match of svg.matchAll(/\bid="([^"]+)"/g)) {
-    ids.add(match[1]);
-  }
-  const sorted = [...ids].sort((a, b) => b.length - a.length);
-  let out = svg;
-  for (const id of sorted) {
-    const next = `${prefix}-${id}`;
-    out = out
-      .replaceAll(`id="${id}"`, `id="${next}"`)
-      .replaceAll(`url(#${id})`, `url(#${next})`)
-      .replaceAll(`href="#${id}"`, `href="#${next}"`)
-      .replaceAll(`xlink:href="#${id}"`, `xlink:href="#${next}"`);
-  }
-  return out;
-}
-
-/** Drop fixed px size so CSS can scale from viewBox. */
-function scalableSvg(svg: string): string {
-  return svg.replace(/<svg\b([^>]*)>/i, (_full, attrs: string) => {
-    const cleaned = attrs
-      .replace(/\swidth="[^"]*"/gi, "")
-      .replace(/\sheight="[^"]*"/gi, "")
-      .replace(/\sstyle="[^"]*"/gi, "");
-    return `<svg${cleaned} style="max-width:100%;height:auto">`;
-  });
-}
+type SvgSize = {
+  width: string | null;
+  height: string | null;
+  style: string | null;
+};
 
 export function Mermaid({ children }: { children?: React.ReactNode }) {
   const code = String(children ?? "").trim();
-  const reactId = useId().replace(/:/g, "");
-  const [svg, setSvg] = useState<string>("");
-  const [error, setError] = useState<string>("");
+  const [ready, setReady] = useState(false);
+  const [error, setError] = useState("");
   const [open, setOpen] = useState(false);
+
+  const inlineRef = useRef<HTMLDivElement>(null);
+  const svgRef = useRef<SVGSVGElement | null>(null);
+  const sizeRef = useRef<SvgSize | null>(null);
+
+  const restoreInline = useCallback(() => {
+    const el = svgRef.current;
+    const inline = inlineRef.current;
+    const saved = sizeRef.current;
+    if (el && saved) {
+      if (saved.width == null) el.removeAttribute("width");
+      else el.setAttribute("width", saved.width);
+      if (saved.height == null) el.removeAttribute("height");
+      else el.setAttribute("height", saved.height);
+      if (saved.style == null || saved.style === "") el.removeAttribute("style");
+      else el.setAttribute("style", saved.style);
+    }
+    if (el && inline && el.parentElement !== inline) {
+      inline.appendChild(el);
+    }
+    if (inline) inline.style.minHeight = "";
+  }, []);
+
+  const hostRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      const el = svgRef.current;
+      if (node && el) {
+        if (!sizeRef.current) {
+          sizeRef.current = {
+            width: el.getAttribute("width"),
+            height: el.getAttribute("height"),
+            style: el.getAttribute("style"),
+          };
+        }
+        // Mermaid often uses width="100%"; that collapses inside an auto-sized host.
+        const vb = el.viewBox.baseVal;
+        if (vb.width > 0 && vb.height > 0) {
+          el.setAttribute("width", String(vb.width));
+          el.setAttribute("height", String(vb.height));
+        }
+        el.style.width = "auto";
+        el.style.height = "auto";
+        el.style.maxWidth = "min(1100px, 90vw)";
+        el.style.maxHeight = "80vh";
+        node.appendChild(el);
+      } else {
+        restoreInline();
+      }
+    },
+    [restoreInline]
+  );
 
   useEffect(() => {
     let cancelled = false;
     const id = `mermaid-${++counter}`;
+
     try {
       mermaid.initialize({
         startOnLoad: false,
@@ -56,7 +89,18 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
       mermaid
         .render(id, code)
         .then(({ svg }) => {
-          if (!cancelled) setSvg(svg);
+          if (cancelled) return;
+          const shell = document.createElement("div");
+          shell.innerHTML = svg;
+          const el = shell.querySelector("svg");
+          if (!el || !inlineRef.current) {
+            setError("Mermaid SVG missing");
+            return;
+          }
+          svgRef.current = el;
+          sizeRef.current = null;
+          inlineRef.current.replaceChildren(el);
+          setReady(true);
         })
         .catch((err: unknown) => {
           if (!cancelled) setError(String(err));
@@ -64,8 +108,11 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
     } catch (err) {
       if (!cancelled) setError(String(err));
     }
+
     return () => {
       cancelled = true;
+      svgRef.current = null;
+      sizeRef.current = null;
     };
   }, [code]);
 
@@ -83,16 +130,10 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
     };
   }, [open]);
 
-  if (error) {
-    return (
-      <pre className="mermaid-error" aria-label="Mermaid diagram error">
-        {code}
-      </pre>
-    );
-  }
-
   const openZoom = () => {
-    if (svg) setOpen(true);
+    if (!ready || !svgRef.current || !inlineRef.current) return;
+    inlineRef.current.style.minHeight = `${inlineRef.current.offsetHeight}px`;
+    setOpen(true);
   };
 
   const onKeyActivate = (e: KeyboardEvent<HTMLDivElement>) => {
@@ -102,15 +143,19 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
     }
   };
 
-  const lightboxSvg = open
-    ? scalableSvg(uniquifySvgIds(svg, `lb-${reactId}`))
-    : "";
+  if (error) {
+    return (
+      <pre className="mermaid-error" aria-label="Mermaid diagram error">
+        {code}
+      </pre>
+    );
+  }
 
   return (
     <>
       <div
+        ref={inlineRef}
         className="mermaid-wrap mermaid-wrap--zoomable"
-        dangerouslySetInnerHTML={{ __html: svg }}
         role="button"
         tabIndex={0}
         aria-label="Diyagramı büyüt"
@@ -118,7 +163,7 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
         onClick={openZoom}
         onKeyDown={onKeyActivate}
       />
-      {open && lightboxSvg
+      {open
         ? createPortal(
             <div
               className="lightbox"
@@ -129,9 +174,10 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
             >
               <div
                 className="lightbox__diagram"
-                dangerouslySetInnerHTML={{ __html: lightboxSvg }}
                 onClick={(e) => e.stopPropagation()}
-              />
+              >
+                <div className="lightbox__diagram-inner" ref={hostRef} />
+              </div>
               <div className="lightbox__hint">ESC · kapat</div>
             </div>,
             document.body
