@@ -463,6 +463,31 @@ code, pre, kbd, samp { font-family: var(--font-mono); }
   overflow-x: auto;
 }
 .mermaid-wrap svg { max-width: 100%; height: auto; }
+.mermaid-wrap--zoomable {
+  cursor: zoom-in;
+}
+.mermaid-wrap--zoomable:focus-visible {
+  outline: 2px solid var(--accent, #3b82f6);
+  outline-offset: 2px;
+}
+.lightbox__diagram {
+  max-width: 94vw;
+  max-height: 88vh;
+  overflow: auto;
+  background: var(--paper-raised, #fff);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.lightbox__diagram svg {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(1400px, 90vw);
+  max-height: 82vh;
+  margin: 0 auto;
+}
 
 /* ---------- Post list / feed ---------- */
 .post-list { list-style: none; padding: 0; margin: 0; }

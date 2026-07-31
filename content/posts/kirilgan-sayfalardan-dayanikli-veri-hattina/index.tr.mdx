@@ -39,6 +39,19 @@ Bu ayrım birkaç sorunu aynı anda çözdü. Keşfi yeniden çalıştırdığı
 
 Her işin durumu `pending`, `scraping`, `done`, `failed` veya `skipped` olarak tutuluyor. `skipped`, kaydın kaybolduğu anlamına gelmiyor: bağlantı ve özet bilgi korunuyor, fakat ayrıntılı grafik işlenmiyor. Böylece “neden alınmadı?” sorusuna yaş, süre veya hedef listesinden çıkarılma gibi somut bir yanıt verebiliyorum.
 
+```mermaid
+flowchart LR
+  Candidate["Bulunan kayıt"] --> Check{"Filtreye uygun mu?"}
+  Check -->|Hayır| Skipped["skipped: bağlantıyı koru"]
+  Check -->|Evet| Pending["pending: kuyruğa al"]
+  Pending --> Scraping["scraping: işlem başladı"]
+  Scraping --> Done["done: tamamlandı"]
+  Scraping --> Failed["failed: tekrar denenebilir"]
+  Failed --> Pending
+  Scraping --> Interrupted["kesinti: yarım kaldı"]
+  Interrupted --> Pending
+```
+
 <Callout label="Temel karar">
   Keşif bir seçim problemi, scraping ise bir yürütme problemidir. İkisini aynı
   döngüde çözmeye çalışmak hem tekrar denemeyi hem de veri bütünlüğünü
@@ -63,6 +76,15 @@ Headless koşularda tarayıcı sanal bir ekran üzerinde çalışıyor. Yerel ge
 
 “Bot korumasını aşmak” burada bir güvenlik açığı kullanmak veya doğrulama mekanizmasını devre dışı bırakmak anlamına gelmiyor. `invisible_playwright`, otomasyonun tarayıcı parmak izini ve etkileşimlerini sıradan bir oturuma yaklaştırdı; uygulama ise benim yetkili hesabımın normal akışı içinde çalıştı. Bir koruma ekranı geldiğinde scraper bunu gizlice çözmeye çalışmıyor: bekliyor, sınırlı sayıda yeniden deniyor ve erişim sağlanamazsa işi başarısız olarak kaydediyor. Kütüphane de tek başına geçiş garantisi vermiyor; oturumun geçerliliği ve ağın itibarı hâlâ sonucu etkiliyor.
 
+```mermaid
+flowchart TD
+  Open["Yetkili oturumla sayfayı aç"] --> Detect{"Koruma ekranı var mı?"}
+  Detect -->|Hayır| Continue["Normal veri akışına devam et"]
+  Detect -->|Evet| Wait["Bekle ve sınırlı tekrar dene"]
+  Wait --> Detect
+  Wait -->|"Deneme sınırı aşıldı"| Record["Başarısızlığı kaydet ve dur"]
+```
+
 Kalıcılık katmanında SQLAlchemy ve SQLite var. SQLAlchemy durum geçişlerini ve ilişkileri modellemeyi kolaylaştırırken tek dosyalı SQLite kurulumu uzun yerel koşular için operasyonel yükü düşük tuttu. Pandas ve PyArrow, tamamlanan veriyi CSV ve Parquet biçimlerine taşıyor. Tenacity sınırlı tekrar denemeleri, Click komut satırı arayüzünü, Rich canlı ilerleme satırını, YAML ile dotenv ise yapılandırmayı yönetiyor. Pytest testleri de ayrıştırma, filtreleme, tekilleştirme ve kurtarma davranışlarını tarayıcı açmadan doğruluyor.
 
 ### Ham ve Normalize Veri
@@ -71,6 +93,19 @@ Yalnızca normalize edilmiş tabloyu saklamak hızlı analiz için iyi, fakat ay
 
 Normalize katmanda iki farklı veri türü var. Birincisi, izleyici ve etkileşim ölçümlerini belirli zaman damgalarıyla saklayan zaman serisi. İkincisi, grafikteki ani değişimleri açıklayabilen olay kayıtları. Örneğin dışarıdan gelen bir izleyici aktarımı, tek başına organik büyüme gibi görünen sıçramayı açıklayabiliyor. Olayları ana tabloya birkaç sütun sıkıştırmak yerine ayrı bir tabloya koymak, bir yayına birden fazla olay bağlamayı kolaylaştırdı.
 
+```mermaid
+flowchart LR
+  Browser["Tarayıcıdan gelen yanıt"] --> Raw["Ham dosya arşivi"]
+  Browser --> Normalize["Normalize edici"]
+  Normalize --> Summary["Ana kayıt ve özet"]
+  Normalize --> Series["Zaman serisi tablosu"]
+  Normalize --> Events["Olay tablosu"]
+  Summary --> Export["Analiz çıktıları"]
+  Series --> Export
+  Events --> Export
+  Raw -.->|"yeniden ayrıştırma"| Normalize
+```
+
 Özet metrikler ise ana iş kaydında kalıyor. Bu sayede ayrıntılı noktaları açmadan yayın düzeyinde filtreleme yapılabiliyor. Dışa aktarım aşaması ana kayıtları, zaman serisini ve olayları ayrı CSV ve Parquet dosyaları olarak üretiyor. Böyle bir ayrım, veri bilimi tarafında geniş özet tablo ile uzun zaman serisi tablosunu farklı amaçlarla kullanmamı sağladı.
 
 Ham ve normalize veriyi birlikte tutmanın maliyeti disk alanı. Buna karşılık tekrar üretilebilirlik kazancı daha büyük: bugün verdiğim bir analiz sonucunun hangi kaynak dosyadan ve hangi ayrıştırma kurallarıyla geldiğini izleyebiliyorum.
@@ -78,6 +113,14 @@ Ham ve normalize veriyi birlikte tutmanın maliyeti disk alanı. Buna karşılı
 ## İlerlemeyi Gerçekten Görmek
 
 İlk tam ölçekli scraping koşusu yaklaşık 12 saat sürdü. Koşu sonundaki anlık görüntü, ham dosyalar ve yerel veritabanıyla birlikte yaklaşık **335 MiB** disk alanı kaplıyordu. Bu hacimde 1.391 ham yanıt dosyası, **1,16 milyondan fazla normalize kayıt** ve birkaç bin olay satırı vardı. Tek başına devasa bir veri kümesi değil; fakat tek süreçte, uzun süre ve tekrar üretilebilir biçimde toplandığında kuyruk yönetimi ile hata toleransını zorunlu kılacak kadar büyük.
+
+```mermaid
+pie showData
+  title Yaklaşık 335 MiB çalışma çıktısının dağılımı
+  "Ham dosyalar" : 146
+  "Yerel veritabanı" : 184
+  "Diğer çalışma çıktıları" : 5
+```
 
 Uzun bir scraper sessiz kaldığında çalışıyor mu, bekliyor mu, yoksa aynı kayıtta takıldı mı anlamak zor. Başta her olay için terminale yeni bir satır yazdırıyordum. Bu kez de yüzlerce satır arasında toplam ilerleme kayboldu. Çözüm, normal logları yukarı akıtırken terminalin altında tek bir canlı ilerleme satırı tutmak oldu.
 

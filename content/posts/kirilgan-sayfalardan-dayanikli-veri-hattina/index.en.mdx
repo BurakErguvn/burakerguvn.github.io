@@ -39,6 +39,19 @@ This separation solved several problems at once. Re-running discovery does not e
 
 Each job has one of five states: `pending`, `scraping`, `done`, `failed`, or `skipped`. A skipped record is not discarded. Its link and summary remain available, but its detailed chart is not collected. That leaves an auditable answer to “why was this record not processed?”—it may have fallen outside the age window, missed the duration threshold, or no longer belonged to the target list.
 
+```mermaid
+flowchart LR
+  Candidate["Discovered record"] --> Check{"Does it pass the filter?"}
+  Check -->|No| Skipped["skipped: preserve the link"]
+  Check -->|Yes| Pending["pending: add to queue"]
+  Pending --> Scraping["scraping: work started"]
+  Scraping --> Done["done: complete"]
+  Scraping --> Failed["failed: retryable"]
+  Failed --> Pending
+  Scraping --> Interrupted["interrupted: stale work"]
+  Interrupted --> Pending
+```
+
 <Callout label="Core decision">
 Discovery is a selection problem; scraping is an execution problem. Combining both in one loop makes retries and data integrity harder than they need to be.
 </Callout>
@@ -61,6 +74,15 @@ In headless mode, the browser runs on a virtual display. During local developmen
 
 “Getting past bot protection” did not mean exploiting a vulnerability or disabling a verification mechanism. `invisible_playwright` made the browser fingerprint and interactions look closer to an ordinary session, while the application continued to operate through my authorized account. When a protection screen appeared, the scraper did not secretly solve it: it waited, retried a bounded number of times, and recorded a failure if access remained unavailable. The library is not a universal guarantee either; session validity and network reputation still affect the result.
 
+```mermaid
+flowchart TD
+  Open["Open page with an authorized session"] --> Detect{"Protection screen present?"}
+  Detect -->|No| Continue["Continue normal data flow"]
+  Detect -->|Yes| Wait["Wait and retry within a limit"]
+  Wait --> Detect
+  Wait -->|"Retry limit reached"| Record["Record failure and stop"]
+```
+
 SQLAlchemy and SQLite form the persistence layer. SQLAlchemy makes state transitions and relationships explicit, while a single-file SQLite database keeps operational overhead low for long local runs. Pandas and PyArrow produce CSV and Parquet outputs. Tenacity provides bounded retries, Click defines the command-line interface, Rich renders the live progress line, and YAML plus dotenv handle configuration. Pytest verifies parsing, filtering, deduplication, and recovery behavior without launching a browser.
 
 ### Raw and Normalized Data
@@ -69,6 +91,19 @@ Normalized tables are convenient for analysis, but they are not enough when a pa
 
 The normalized layer contains two types of data. The first is a time series of audience and interaction measurements. The second is a set of events that can explain abrupt changes in the chart. An inbound audience transfer, for example, may account for a jump that would otherwise look like organic growth. Storing events in their own table supports multiple events per session without forcing them into a handful of columns.
 
+```mermaid
+flowchart LR
+  Browser["Response from the browser"] --> Raw["Raw file archive"]
+  Browser --> Normalize["Normalizer"]
+  Normalize --> Summary["Main record and summary"]
+  Normalize --> Series["Time-series table"]
+  Normalize --> Events["Event table"]
+  Summary --> Export["Analysis outputs"]
+  Series --> Export
+  Events --> Export
+  Raw -.->|"re-parse"| Normalize
+```
+
 Session-level summaries remain on the main record. This keeps broad filtering inexpensive while detailed points stay in a separate long table. The export step produces independent CSV and Parquet datasets for sessions, time-series points, and events. That layout works well for analysis because summary-level questions and time-dependent questions rarely need the same table shape.
 
 Keeping both raw and normalized data costs disk space. In return, it provides reproducibility: I can trace an analysis result back to the source file and the parser rules that produced it. That trade-off is particularly useful when the upstream interface can evolve independently of my code.
@@ -76,6 +111,14 @@ Keeping both raw and normalized data costs disk space. In return, it provides re
 ## Making Progress Visible
 
 The first full-scale scraping run took roughly 12 hours. At the end of that run, the working snapshot occupied about **335 MiB** across raw files and the local database. It contained 1,391 raw response files, more than **1.16 million normalized records**, and a few thousand event rows. This is not an enormous dataset by modern standards, but it is large enough—when collected by one long-running, reproducible process—to make queue management and fault tolerance necessary rather than optional.
+
+```mermaid
+pie showData
+  title Approximate distribution of the 335 MiB working set
+  "Raw files" : 146
+  "Local database" : 184
+  "Other working outputs" : 5
+```
 
 When a scraper stays quiet for several minutes, it is difficult to tell whether it is working, waiting, or stuck on the same record. My first response was to print a new terminal line for every event. That created the opposite problem: overall progress disappeared inside hundreds of log messages.
 
