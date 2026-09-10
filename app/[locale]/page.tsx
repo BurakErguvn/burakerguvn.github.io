@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { DitherHero } from "@/components/DitherHero";
 import { PostList } from "@/components/PostList";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { EntropyDivider } from "@/components/EntropyDivider";
 import { getAllPostsByLocale, collectionRoute } from "@/lib/content";
 import { dict, locales, type Locale } from "@/lib/i18n";
 import { OG_IMAGE, SITE_URL } from "@/lib/jsonld";
@@ -43,6 +43,20 @@ export function generateMetadata({
   };
 }
 
+function titleWithAccent(title: string, accent: string) {
+  const lower = title.toLocaleLowerCase("tr");
+  const needle = accent.toLocaleLowerCase("tr");
+  const i = lower.lastIndexOf(needle);
+  if (i === -1) return title;
+  return (
+    <>
+      {title.slice(0, i)}
+      <span className="hero__accent">{title.slice(i, i + accent.length)}</span>
+      {title.slice(i + accent.length)}
+    </>
+  );
+}
+
 export default function HomePage({ params }: { params: { locale: Locale } }) {
   const locale = params.locale;
   const t = dict[locale];
@@ -51,12 +65,16 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
     tr: {
       title: SITE_BRAND.tr,
       accent: "makineler",
-      dek: "Veri bilimi, makine öğrenmesi ve kuantum hata düzeltme üzerine matematiksel ve algoritmik derinlikte bir araştırma defteri.",
+      quote:
+        "Bir zamanlar, insanlar düşünme işini makinelere devretmiş, böylece özgürleşmeyi umut etmişlerdi; ama bu, makinelere sahip başka insanların onları köleleştirmesine yol açtı sadece.",
+      cite: "Frank Herbert, Dune",
     },
     en: {
       title: SITE_BRAND.en,
       accent: "machines",
-      dek: "A research notebook on data science, machine learning and quantum error correction — with mathematical and algorithmic depth.",
+      quote:
+        "Once, men turned their thinking over to machines in the hope that this would set them free. But that only permitted other men with machines to enslave them.",
+      cite: "Frank Herbert, Dune",
     },
   }[locale];
 
@@ -65,11 +83,19 @@ export default function HomePage({ params }: { params: { locale: Locale } }) {
 
   return (
     <div className="main-col">
-      <DitherHero
-        title={hero.title}
-        accent={hero.accent}
-        dek={hero.dek}
-      />
+      <section className="hero">
+        <h1 className="hero__title">{titleWithAccent(hero.title, hero.accent)}</h1>
+        <div className="hero__ornament" aria-hidden="true">
+          ⁂
+        </div>
+        <blockquote className="hero__dek">
+          <p>{hero.quote}</p>
+          <footer>
+            <cite>― {hero.cite}</cite>
+          </footer>
+        </blockquote>
+        <EntropyDivider />
+      </section>
       <div
         style={{
           display: "flex",

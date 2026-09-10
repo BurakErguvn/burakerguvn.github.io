@@ -1,0 +1,7 @@
+# Cloudflare Pages — Next.js static export (`npm run build` → `out/`).
+# Git / dashboard: framework preset None, build command `npm run build`,
+# output directory `out`, Node.js 20. Do not use @cloudflare/next-on-pages;
+# this site is `output: 'export'`, not a Worker SSR app.
+name = "erguvenburak"
+compatibility_date = "2026-09-10"
+pages_build_output_dir = "./out"

@@ -5,9 +5,9 @@ import {
   collectionRoute,
 } from "@/lib/content";
 import { dict, type Locale } from "@/lib/i18n";
-import { SITE_BRAND, siteDocumentTitle } from "@/lib/site";
+import { SITE_BRAND, SITE_URL, siteDocumentTitle } from "@/lib/site";
 
-export const SITE_URL = "https://burakerguvn.github.io";
+export { SITE_URL };
 export const OG_IMAGE = `${SITE_URL}/og.png`;
 
 function absoluteUrl(path: string): string {
@@ -116,6 +116,7 @@ export function articleBreadcrumbs(post: Post, locale: Locale) {
     posts: t.writing,
     research: t.research,
     notes: t.notes,
+    quotes: t.quotes,
   };
 
   return breadcrumbJsonLd([

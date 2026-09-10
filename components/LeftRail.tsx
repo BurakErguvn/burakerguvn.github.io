@@ -20,7 +20,7 @@ export function LeftRail() {
     { href: `${base}/writing`, label: t.writing },
     { href: `${base}/research`, label: t.research },
     { href: `${base}/notes`, label: t.notes },
-    { href: `${base}/tags`, label: t.tags },
+    { href: `${base}/quotes`, label: t.quotes },
     { href: `${base}/about`, label: t.about },
   ];
 

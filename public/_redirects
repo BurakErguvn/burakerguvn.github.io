@@ -1,0 +1,6 @@
+# Decap CMS lives at /admin/
+/admin  /admin/  301
+
+# Canonical host once the custom domain is attached
+https://www.erguvenburak.zip/*  https://erguvenburak.zip/:splat  301
+https://erguvenburak.pages.dev/*  https://erguvenburak.zip/:splat  301

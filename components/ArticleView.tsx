@@ -35,6 +35,7 @@ export function ArticleView({
     posts: t.backToIndex,
     research: t.backToResearch,
     notes: t.backToNotes,
+    quotes: t.backToQuotes,
   };
 
   const hrefs: Partial<Record<Locale, string>> = {};
@@ -84,5 +85,8 @@ export function ArticleView({
 
 export function collectionLabel(c: Collection, locale: Locale) {
   const t = dict[locale];
-  return c === "research" ? t.research : c === "notes" ? t.notes : t.writing;
+  if (c === "research") return t.research;
+  if (c === "notes") return t.notes;
+  if (c === "quotes") return t.quotes;
+  return t.writing;
 }

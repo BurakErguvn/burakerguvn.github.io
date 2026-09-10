@@ -21,12 +21,16 @@ export function PostList({
     <ul className="post-list">
       {posts.map((p) => (
         <li key={`${p.collection}-${p.slug}`}>
-          <Link href={`/${locale}/${route}/${p.slug}/`}>
+          <Link
+            href={`/${locale}/${route}/${p.slug}/`}
+            className="post-list__row"
+          >
             <h3>{p.title}</h3>
+            <span className="post-list__leader" aria-hidden="true" />
+            <span className="post-list__meta">
+              {formatDate(p.date, locale)} · {t.readingTime(p.readingMinutes)}
+            </span>
           </Link>
-          <div className="post-list__meta">
-            {formatDate(p.date, locale)} · {t.readingTime(p.readingMinutes)}
-          </div>
           {p.dek ? <p className="post-list__dek">{p.dek}</p> : null}
         </li>
       ))}

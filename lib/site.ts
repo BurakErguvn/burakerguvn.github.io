@@ -1,5 +1,8 @@
 import type { Locale } from "@/lib/i18n";
 
+/** Canonical origin — Cloudflare Pages custom domain. */
+export const SITE_URL = "https://erguvenburak.zip";
+
 /** Visible brand / hero title per locale. */
 export const SITE_BRAND: Record<Locale, string> = {
   tr: "düşünen makineler",

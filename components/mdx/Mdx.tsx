@@ -27,7 +27,7 @@ const options = {
     remarkPlugins: [remarkGfm, remarkMath, remarkMermaid],
     rehypePlugins: [
       rehypeKatex,
-      [rehypePrettyCode, { theme: "github-dark", keepBackground: false }] as never,
+      [rehypePrettyCode, { theme: "github-light", keepBackground: false }] as never,
       rehypeSlug,
       [
         rehypeAutolinkHeadings,

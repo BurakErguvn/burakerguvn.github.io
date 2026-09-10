@@ -6,8 +6,9 @@ import {
   type Collection,
 } from "@/lib/content";
 import { locales, defaultLocale, type Locale } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 
-const BASE = "https://burakerguvn.github.io";
+const BASE = SITE_URL;
 
 /** Date-only lastmod (YYYY-MM-DD) — preferred by sitemap validators. */
 function lastmod(date?: string): string | undefined {
@@ -69,13 +70,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       entry(locale, "/notes/", { changeFrequency: "weekly", priority: 0.7 })
     );
     entries.push(
+      entry(locale, "/quotes/", { changeFrequency: "weekly", priority: 0.6 })
+    );
+    entries.push(
       entry(locale, "/about/", { changeFrequency: "monthly", priority: 0.5 })
     );
     entries.push(
       entry(locale, "/tags/", { changeFrequency: "weekly", priority: 0.4 })
     );
 
-    for (const collection of ["posts", "research", "notes"] as Collection[]) {
+    for (const collection of ["posts", "research", "notes", "quotes"] as Collection[]) {
       const route = collectionRoute[collection];
       for (const post of getPostsByLocale(collection, locale)) {
         entries.push(

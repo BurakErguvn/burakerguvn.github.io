@@ -1,21 +1,15 @@
 # Decap CMS — iki dilli (TR/EN) yapılandırma
 #
-# GitHub Pages statik olduğu için Decap'in "Login with GitHub" akışı bir
+# Cloudflare Pages statik olduğu için Decap'in "Login with GitHub" akışı bir
 # OAuth proxy'si ister. Proxy, GitHub OAuth kodunu sunucu tarafında token'a
 # çevirir ve Decap'e postMessage ile iletir. İki endpoint sağlamalıdır:
 #   /auth      -> GitHub yetkilendirme akışını başlatır
 #   /callback  -> GitHub kodunu alır, token'a çevirir, Decap'e geri gönderir
 #
-# Önerilen hazır proxy'ler (Cloudflare Worker, ücretsiz):
-#   - https://github.com/sterlingwes/decap-proxy
-#   - https://github.com/ottmartens/decap-cms-github-oauth-provider-cloudflare
-#
-# Kurulum özeti:
-#   1) GitHub'da OAuth App oluştur (Settings > Developer settings > OAuth Apps).
-#      Callback URL: https://<proxy-url>/callback
-#   2) Proxy'yi Cloudflare Worker'a deploy et; Client ID/Secret'u worker
-#      secret'leri olarak ekle (GITHUB_OAUTH_ID / GITHUB_OAUTH_SECRET).
-#   3) Aşağıdaki base_url'i kendi proxy URL'inle değiştir.
+# Proxy bu sitede Cloudflare Worker olarak çalışıyor:
+#   https://decap-proxy.erguvenburak-dev.workers.dev
+# GitHub OAuth App callback URL: https://decap-proxy.erguvenburak-dev.workers.dev/callback
+# Worker ALLOWED_ORIGINS listesine https://erguvenburak.zip ekli olmalı.
 
 backend:
   name: github
@@ -23,6 +17,9 @@ backend:
   branch: main
   base_url: https://decap-proxy.erguvenburak-dev.workers.dev
   auth_endpoint: /auth
+
+site_url: https://erguvenburak.zip
+display_url: https://erguvenburak.zip
 
 # Statik exportta medya /admin altında değil, repo kökünde public/ tutulur
 media_folder: "public/uploads"
@@ -107,6 +104,29 @@ collections:
       - { name: tags, label: "Etiketler / Tags", widget: list, required: false, i18n: true }
       - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
       - { name: body, label: "İçerik / Body", widget: markdown, i18n: true }
+
+  - name: quotes
+    label: "Alıntılar / Extracts"
+    label_singular: "Alıntı / Extract"
+    folder: content/quotes
+    create: true
+    delete: true
+    extension: mdx
+    format: frontmatter
+    slug: "{{slug}}"
+    path: "{{slug}}/index"
+    i18n:
+      structure: multiple_files
+      locales: [tr, en]
+      default_locale: tr
+    summary: "{{author}} — {{work}}"
+    fields:
+      - { name: title, label: "Kayıt adı / Entry title", widget: string, i18n: true }
+      - { name: author, label: "Yazar / Author", widget: string, i18n: duplicate }
+      - { name: work, label: "Eser / Work", widget: string, required: false, i18n: true }
+      - { name: date, label: "Tarih / Date", widget: datetime, i18n: duplicate }
+      - { name: draft, label: "Taslak / Draft", widget: boolean, default: false, i18n: duplicate }
+      - { name: body, label: "Alıntı / Quotation", widget: markdown, i18n: true }
 
   # Özgeçmiş — tek JSON dosyası. Hiçbir i18n yapılandırması yok; bu bir
   # "files" koleksiyonu olduğu için multiple_files ile çakışmaması gerekir.

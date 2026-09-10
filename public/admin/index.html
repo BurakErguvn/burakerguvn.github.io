@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex" />
-    <title>İçerik Yöneticisi — burakerguvn.github.io</title>
+    <title>İçerik Yöneticisi — erguvenburak.zip</title>
     <link rel="icon" href="data:," />
     <link
       rel="stylesheet"
@@ -13,7 +13,7 @@
   </head>
   <body>
     <!--
-      GitHub Pages üzerinde Decap auth için bir OAuth proxy gerekir.
+      Cloudflare Pages üzerinde Decap auth için bir OAuth proxy gerekir.
       Proxy: https://decap-proxy.erguvenburak-dev.workers.dev (Cloudflare Worker).
       GitHub OAuth App callback URL: https://decap-proxy.erguvenburak-dev.workers.dev/callback
       base_url + auth_endpoint config.yml içinde tanımlı.
@@ -202,6 +202,7 @@
         CMS.registerPreviewTemplate("posts", makePreview("Writing · Yazı"));
         CMS.registerPreviewTemplate("research", makePreview("Research · Araştırma"));
         CMS.registerPreviewTemplate("notes", makePreview("Notes · Not"));
+        CMS.registerPreviewTemplate("quotes", makePreview("Extracts · Alıntı"));
 
         // ---------- CV önizlemesi ----------
         // Varsayılan önizleme, iç içe object/list yapısında #130 veriyor;

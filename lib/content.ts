@@ -6,13 +6,14 @@ import readingTime from "reading-time";
 import GithubSlugger from "github-slugger";
 import { locales, defaultLocale, type Locale } from "./i18n";
 
-export type Collection = "posts" | "research" | "notes";
+export type Collection = "posts" | "research" | "notes" | "quotes";
 
 /** Route segment -> content directory. */
 export const collectionDir: Record<Collection, string> = {
   posts: "posts",
   research: "research",
   notes: "notes",
+  quotes: "quotes",
 };
 
 /** Route segment shown in URL. */
@@ -20,6 +21,7 @@ export const collectionRoute: Record<Collection, string> = {
   posts: "writing",
   research: "research",
   notes: "notes",
+  quotes: "quotes",
 };
 
 export interface Frontmatter {
@@ -28,6 +30,8 @@ export interface Frontmatter {
   date: string; // YYYY-MM-DD
   tags?: string[];
   draft?: boolean;
+  author?: string;
+  work?: string;
 }
 
 export interface PostMeta {
@@ -39,6 +43,8 @@ export interface PostMeta {
   date: string;
   tags: string[];
   draft: boolean;
+  author: string;
+  work: string;
   readingMinutes: number;
   /** absolute path to the source mdx file */
   filePath: string;
@@ -63,6 +69,7 @@ function collectionOf(filePath: string): Collection | null {
   if (top === "posts") return "posts";
   if (top === "research") return "research";
   if (top === "notes") return "notes";
+  if (top === "quotes") return "quotes";
   return null;
 }
 
@@ -97,6 +104,8 @@ function parseFile(filePath: string): PostMeta | null {
     date: fm.date ?? "",
     tags: fm.tags ?? [],
     draft: fm.draft ?? false,
+    author: fm.author ?? "",
+    work: fm.work ?? "",
     readingMinutes: Math.max(1, Math.round(minutes)),
     filePath,
   };
@@ -123,7 +132,12 @@ export function getPostsByLocale(
 
 export function getAllPostsByLocale(locale: Locale): PostMeta[] {
   return allMetas()
-    .filter((m) => m.locale === locale && !m.draft)
+    .filter(
+      (m) =>
+        m.locale === locale &&
+        !m.draft &&
+        m.collection !== "quotes"
+    )
     .sort((a, b) => (a.date < b.date ? 1 : -1));
 }
 
@@ -146,6 +160,23 @@ export function getPost(
   }
   const raw = fs.readFileSync(meta.filePath, "utf8");
   return { ...meta, raw: matter(raw).content };
+}
+
+export function getPostsFull(
+  collection: Collection,
+  locale: Locale
+): Post[] {
+  return getPostsByLocale(collection, locale)
+    .map((m) => getPost(collection, m.slug, locale))
+    .filter((p): p is Post => p !== null);
+}
+
+export function quoteAttribution(post: PostMeta): string {
+  const work = post.work || post.title;
+  if (post.author && work && post.author !== work) {
+    return `${post.author}, ${work}`;
+  }
+  return post.author || work;
 }
 
 /** Slugs available for a collection (union across locales), for generateStaticParams. */
@@ -178,7 +209,9 @@ export function getAllTags(locale: Locale): { tag: string; count: number }[] {
 }
 
 function getPostsByLocaleAll(locale: Locale): PostMeta[] {
-  return allMetas().filter((m) => m.locale === locale && !m.draft);
+  return allMetas().filter(
+    (m) => m.locale === locale && !m.draft && m.collection !== "quotes"
+  );
 }
 
 export function getPostsByTag(locale: Locale, tag: string): PostMeta[] {

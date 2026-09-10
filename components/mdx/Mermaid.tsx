@@ -9,8 +9,20 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import mermaid from "mermaid";
+import {
+  engraveMermaidSvg,
+  mermaidVintageConfig,
+  parseMermaidSvg,
+} from "@/lib/mermaid-vintage";
 
 let counter = 0;
+let mermaidReady = false;
+
+function ensureMermaid() {
+  if (mermaidReady) return;
+  mermaid.initialize(mermaidVintageConfig as Parameters<typeof mermaid.initialize>[0]);
+  mermaidReady = true;
+}
 
 type SvgSize = {
   width: string | null;
@@ -80,23 +92,17 @@ export function Mermaid({ children }: { children?: React.ReactNode }) {
     const id = `mermaid-${++counter}`;
 
     try {
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: "neutral",
-        securityLevel: "loose",
-        fontFamily: "var(--font-ibm-plex-mono), monospace",
-      });
+      ensureMermaid();
       mermaid
         .render(id, code)
         .then(({ svg }) => {
           if (cancelled) return;
-          const shell = document.createElement("div");
-          shell.innerHTML = svg;
-          const el = shell.querySelector("svg");
+          const el = parseMermaidSvg(svg);
           if (!el || !inlineRef.current) {
             setError("Mermaid SVG missing");
             return;
           }
+          engraveMermaidSvg(el, id);
           svgRef.current = el;
           sizeRef.current = null;
           inlineRef.current.replaceChildren(el);
