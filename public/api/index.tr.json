@@ -1,0 +1,54 @@
+[
+  {
+    "slug": "bir-milyon-satiri-kagglea-hazirlarken-ogrendiklerim",
+    "locale": "tr",
+    "collection": "posts",
+    "title": "Bir Milyon Satırı Kaggle’a Hazırlarken Öğrendiklerim",
+    "dek": "Bir scraper çıktısını kimliklerden arındırırken ilişkileri, zaman çözünürlüğünü ve tekrar üretilebilirliği nasıl koruduğumu anlatıyorum.",
+    "date": "2026-08-05",
+    "tags": [
+      "Kaggle",
+      "veri anonimleştirme",
+      "veri kalitesi",
+      "veri hattı"
+    ],
+    "draft": false,
+    "readingMinutes": 5,
+    "route": "writing"
+  },
+  {
+    "slug": "kirilgan-sayfalardan-dayanikli-veri-hattina",
+    "locale": "tr",
+    "collection": "posts",
+    "title": "Kırılgan Sayfalardan Dayanıklı Veri Hattına",
+    "dek": "Uzun süre çalışan bir web scraper’ı; kalıcı kuyruk, güvenli tekrar deneme ve gözlemlenebilirlik ile nasıl dayanıklı hâle getirdiğimi anlatıyorum.",
+    "date": "2026-07-31",
+    "tags": [
+      "web scraping",
+      "tarayıcı otomasyonu",
+      "veri hattı",
+      "hata toleransı"
+    ],
+    "draft": false,
+    "readingMinutes": 9,
+    "route": "writing"
+  },
+  {
+    "slug": "arizayi-bulmak-yetmez",
+    "locale": "tr",
+    "collection": "posts",
+    "title": "Arızayı Bulmak Yetmez: GES Bakımını Optimize Etmek",
+    "dek": "Drone görüntüsünden bakım rotasına uzanan bir karar döngüsünü mimari, YZ metrikleri, MILP/CVRP ve ROI ile anlatıyorum.",
+    "date": "2026-07-27",
+    "tags": [
+      "GES",
+      "YOLO",
+      "optimizasyon",
+      "drone",
+      "kestirimci bakım"
+    ],
+    "draft": false,
+    "readingMinutes": 5,
+    "route": "writing"
+  }
+]

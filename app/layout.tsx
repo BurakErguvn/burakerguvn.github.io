@@ -30,12 +30,12 @@ const ibmPlexMono = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Burak Ergüven — düşünen makineler",
+    default: "Burak Ergüven — erguvenburak.zip",
     template: "%s — Burak Ergüven",
   },
   description:
     "Kişisel teknik blog ve araştırma defteri: Veri Bilimi, ML/DL, Kuantum Hata Düzeltme ve Kuantum ML üzerine matematiksel ve algoritmik derinlikte yazılar.",
-  metadataBase: new URL("https://burakerguvn.github.io"),
+  metadataBase: new URL("https://erguvenburak.zip"),
   alternates: { canonical: "/" },
   verification: GOOGLE_SITE_VERIFICATION
     ? { google: GOOGLE_SITE_VERIFICATION }

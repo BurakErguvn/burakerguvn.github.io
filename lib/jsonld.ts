@@ -7,7 +7,7 @@ import {
 import { dict, type Locale } from "@/lib/i18n";
 import { SITE_BRAND, siteDocumentTitle } from "@/lib/site";
 
-export const SITE_URL = "https://burakerguvn.github.io";
+export const SITE_URL = "https://erguvenburak.zip";
 export const OG_IMAGE = `${SITE_URL}/og.png`;
 
 function absoluteUrl(path: string): string {

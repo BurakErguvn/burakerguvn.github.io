@@ -9,9 +9,9 @@ export default function robots(): MetadataRoute.Robots {
       disallow: ["/*/notes/__none__/", "/*/research/__none__/"],
     },
     sitemap: [
-      "https://burakerguvn.github.io/sitemap.xml",
-      "https://burakerguvn.github.io/sitemap/sitemap.xml",
+      "https://erguvenburak.zip/sitemap.xml",
+      "https://erguvenburak.zip/sitemap/sitemap.xml",
     ],
-    host: "https://burakerguvn.github.io",
+    host: "https://erguvenburak.zip",
   };
 }

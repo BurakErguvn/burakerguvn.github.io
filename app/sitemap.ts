@@ -1,13 +1,12 @@
 import type { MetadataRoute } from "next";
 import {
   getPostsByLocale,
-  getAllTagSlugs,
   collectionRoute,
   type Collection,
 } from "@/lib/content";
 import { locales, defaultLocale, type Locale } from "@/lib/i18n";
 
-const BASE = "https://burakerguvn.github.io";
+const BASE = "https://erguvenburak.zip";
 
 /** Date-only lastmod (YYYY-MM-DD) — preferred by sitemap validators. */
 function lastmod(date?: string): string | undefined {
@@ -71,9 +70,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entries.push(
       entry(locale, "/about/", { changeFrequency: "monthly", priority: 0.5 })
     );
-    entries.push(
-      entry(locale, "/tags/", { changeFrequency: "weekly", priority: 0.4 })
-    );
 
     for (const collection of ["posts", "research", "notes"] as Collection[]) {
       const route = collectionRoute[collection];
@@ -86,16 +82,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
           })
         );
       }
-    }
-
-    for (const tag of getAllTagSlugs(locale)) {
-      entries.push(
-        entry(locale, `/tags/${tag}/`, {
-          changeFrequency: "weekly",
-          priority: 0.3,
-          hreflang: false,
-        })
-      );
     }
   }
 

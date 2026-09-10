@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { PostList } from "@/components/PostList";
-import { getPostsByLocale, collectionRoute } from "@/lib/content";
+import { FinderBoot } from "@/components/os/OsBoots";
 import { dict, type Locale } from "@/lib/i18n";
 
 export function generateMetadata({
@@ -19,27 +18,11 @@ export function generateMetadata({
     description: descriptions[locale],
     alternates: {
       canonical: `/${locale}/research/`,
-      languages: {
-        tr: `/tr/research/`,
-        en: `/en/research/`,
-      },
+      languages: { tr: `/tr/research/`, en: `/en/research/` },
     },
   };
 }
 
 export default function ResearchPage({ params }: { params: { locale: Locale } }) {
-  const locale = params.locale;
-  const t = dict[locale];
-  const posts = getPostsByLocale("research", locale);
-  return (
-    <div className="main-col">
-      <h1>{t.research}</h1>
-      <PostList
-        posts={posts}
-        locale={locale}
-        route={collectionRoute.research}
-        emptyLabel={t.noResearch}
-      />
-    </div>
-  );
+  return <FinderBoot locale={params.locale} collection="research" />;
 }

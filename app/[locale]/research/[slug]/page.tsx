@@ -1,9 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { ArticleView } from "@/components/ArticleView";
-import { PostList } from "@/components/PostList";
-import { getPost, getSlugs, collectionRoute } from "@/lib/content";
-import { dict, type Locale } from "@/lib/i18n";
+import { ArticleBoot, FinderBoot } from "@/components/os/OsBoots";
+import { getPost, getSlugs } from "@/lib/content";
+import { type Locale } from "@/lib/i18n";
 
 export function generateStaticParams() {
   const slugs = getSlugs("research");
@@ -53,21 +52,10 @@ export default async function ResearchPostPage({
 }: {
   params: { locale: Locale; slug: string };
 }) {
-  const t = dict[params.locale];
   if (params.slug === "__none__") {
-    return (
-      <div className="main-col">
-        <h1>{t.research}</h1>
-        <PostList
-          posts={[]}
-          locale={params.locale}
-          route={collectionRoute.research}
-          emptyLabel={t.noResearch}
-        />
-      </div>
-    );
+    return <FinderBoot locale={params.locale} collection="research" />;
   }
   const post = getPost("research", params.slug, params.locale);
   if (!post) notFound();
-  return <ArticleView post={post} locale={params.locale} />;
+  return <ArticleBoot post={post} locale={params.locale} />;
 }

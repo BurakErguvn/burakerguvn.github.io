@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { LeftRail } from "@/components/LeftRail";
-import { SiteFooter } from "@/components/SiteFooter";
 import { LangSync } from "@/components/LangSync";
+import { OsProvider } from "@/components/os/WindowManager";
+import { OsChrome } from "@/components/os/OsChrome";
 import { locales, isLocale, type Locale } from "@/lib/i18n";
+import { getPostsByLocale } from "@/lib/content";
 import {
   websiteJsonLd,
   personJsonLd,
@@ -12,6 +13,7 @@ import {
   SITE_URL,
 } from "@/lib/jsonld";
 import { SITE_BRAND, siteDocumentTitle } from "@/lib/site";
+import type { Catalog } from "@/lib/os/types";
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
@@ -67,23 +69,22 @@ export default function LocaleLayout({
 }) {
   if (!isLocale(params.locale)) notFound();
   const locale = params.locale as Locale;
-
+  const catalog: Catalog = {
+    posts: getPostsByLocale("posts", locale),
+    research: getPostsByLocale("research", locale),
+    notes: getPostsByLocale("notes", locale),
+  };
   const jsonLd = [websiteJsonLd(locale), personJsonLd()];
 
   return (
-    <div className="shell" key={locale}>
+    <OsProvider locale={locale} catalog={catalog}>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
       />
       <LangSync />
-      <LeftRail />
-      <div className="shell__main">
-        {children}
-        <div className="footer-cell">
-          <SiteFooter locale={locale} />
-        </div>
-      </div>
-    </div>
+      <OsChrome />
+      {children}
+    </OsProvider>
   );
 }

@@ -1,0 +1,54 @@
+[
+  {
+    "slug": "bir-milyon-satiri-kagglea-hazirlarken-ogrendiklerim",
+    "locale": "en",
+    "collection": "posts",
+    "title": "What I Learned Preparing a Million Rows for Kaggle",
+    "dek": "How I preserved relationships, time resolution, and reproducibility while removing identities from a scraper export.",
+    "date": "2026-08-05",
+    "tags": [
+      "Kaggle",
+      "data anonymization",
+      "data quality",
+      "data pipeline"
+    ],
+    "draft": false,
+    "readingMinutes": 6,
+    "route": "writing"
+  },
+  {
+    "slug": "kirilgan-sayfalardan-dayanikli-veri-hattina",
+    "locale": "en",
+    "collection": "posts",
+    "title": "From Fragile Pages to a Resilient Data Pipeline",
+    "dek": "How I turned a long-running web scraper into a resilient pipeline with a durable queue, safe retries, and useful observability.",
+    "date": "2026-07-31",
+    "tags": [
+      "web scraping",
+      "browser automation",
+      "data pipeline",
+      "fault tolerance"
+    ],
+    "draft": false,
+    "readingMinutes": 11,
+    "route": "writing"
+  },
+  {
+    "slug": "arizayi-bulmak-yetmez",
+    "locale": "en",
+    "collection": "posts",
+    "title": "Finding Faults Isn't Enough: Optimizing Solar Maintenance",
+    "dek": "From drone imagery to a maintenance route—architecture, YOLO metrics, MILP/CVRP, and ROI in one decision loop.",
+    "date": "2026-07-27",
+    "tags": [
+      "solar",
+      "YOLO",
+      "optimization",
+      "drone",
+      "predictive maintenance"
+    ],
+    "draft": false,
+    "readingMinutes": 6,
+    "route": "writing"
+  }
+]
